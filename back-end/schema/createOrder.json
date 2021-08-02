@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+
+  "definitions": {
+    "orderItem": {
+      "type": "object",
+      "title": "order item schema",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "quantity": {
+          "type": "integer"
+        },
+        "price": {
+          "type": "integer"
+        }
+      },
+      "required": ["name", "description", "quantity", "price"]
+    }
+  },
+
+  "type": "object",
+  "title": "The root schema",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "lastName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "total": {
+      "type": "integer"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "title": "An array of items in this order",
+      "items": { "$ref": "#/definitions/orderItem" }
+    }
+  },
+  "required": ["firstName", "lastName", "total", "items"]
+}

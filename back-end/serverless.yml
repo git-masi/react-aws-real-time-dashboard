@@ -1,0 +1,74 @@
+service: rtk-query-web-socket
+
+frameworkVersion: '2'
+
+plugins:
+  - serverless-bundle
+  - serverless-offline
+  - serverless-cloudside-plugin
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  memorySize: 256
+  environment:
+    MAIN_TABLE_NAME: !Ref RtkQueryWebSocketMainTable
+  apiGateway:
+    shouldStartNameWithService: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+      Resource:
+        - !GetAtt RtkQueryWebSocketMainTable.Arn
+        - !Join ['/', [!GetAtt RtkQueryWebSocketMainTable.Arn, 'index', '*']]
+
+custom:
+  serverless-offline:
+    httpPort: 4321
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+    RtkQueryWebSocketMainTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: RtkQueryWebSocketMainTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+functions:
+  orders:
+    handler: api-handlers/orders.handler
+    events:
+      - http:
+          method: GET
+          path: orders
+      - http:
+          method: POST
+          path: orders
+          request:
+            schema:
+              application/json: ${file(schema/createOrder.json)}
