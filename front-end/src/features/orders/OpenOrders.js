@@ -10,6 +10,7 @@ import {
   Paper,
   Container,
 } from '@material-ui/core';
+import { formatUsd } from '../../utils/currency';
 
 export default function OpenOrders() {
   const { data: orders, error, isLoading } = useGetOrdersQuery();
@@ -54,7 +55,7 @@ function Order(props) {
       <Stack spacing={1}>
         <h3>{`${order.firstName} ${order.lastName}`}</h3>
         <p>Order Status: {order.status}</p>
-        <p>Total: {order.total}</p>
+        <p>Total: {formatUsd(order.total)}</p>
         <p>Created: {order.created.split('T')[0]}</p>
       </Stack>
     </Paper>
