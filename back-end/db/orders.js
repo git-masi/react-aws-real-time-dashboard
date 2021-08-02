@@ -7,7 +7,7 @@ const { MAIN_TABLE_NAME } = process.env;
 const dynamoDb = new DynamoDB.DocumentClient();
 
 export function getOrders(config = {}) {
-  const { asc = true } = config;
+  const { asc = true, limit, startSk } = config;
   const dbQuery = {
     TableName: MAIN_TABLE_NAME,
     KeyConditionExpression: 'pk = :pk',
@@ -16,6 +16,17 @@ export function getOrders(config = {}) {
     },
     ScanIndexForward: asc,
   };
+
+  if (limit) {
+    dbQuery.Limit = limit;
+  }
+
+  if (startSk) {
+    dbQuery.ExclusiveStartKey = {
+      pk: pkValues.order,
+      sk: startSk,
+    };
+  }
 
   return dynamoDb.query(dbQuery).promise();
 }

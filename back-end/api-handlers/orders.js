@@ -78,7 +78,6 @@ function parseQueryParams(queryStringParameters) {
       case 'asc':
         acc[key] = value !== 'false';
         break;
-        break;
 
       case 'startSk':
         acc[key] = decodeURIComponent(value);
