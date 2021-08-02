@@ -74,3 +74,8 @@ functions:
           request:
             schema:
               application/json: ${file(schema/createOrder.json)}
+
+  fakeOrders:
+    handler: cron-handlers/fakeOrders.handler
+    events:
+      - schedule: rate(1 minute)
