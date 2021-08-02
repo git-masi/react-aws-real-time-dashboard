@@ -1,5 +1,6 @@
 import React from 'react';
+import OpenOrders from './features/orders/OpenOrders';
 
 export default function App() {
-  return <h1>testing 123 can anybody hear me?</h1>;
+  return <OpenOrders />;
 }

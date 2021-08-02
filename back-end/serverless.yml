@@ -66,9 +66,11 @@ functions:
       - http:
           method: GET
           path: orders
+          cors: true
       - http:
           method: POST
           path: orders
+          cors: true
           request:
             schema:
               application/json: ${file(schema/createOrder.json)}
