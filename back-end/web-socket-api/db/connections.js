@@ -1,7 +1,7 @@
 import { DynamoDB } from 'aws-sdk';
 
 const { CONNECTIONS_TABLE_NAME } = process.env;
-const dynamodb = new DynamoDB.DocumentClient();
+const dynamoDb = new DynamoDB.DocumentClient();
 
 export async function addConnection(item) {
   const params = {
@@ -9,5 +9,5 @@ export async function addConnection(item) {
     Item: item,
   };
 
-  return dynamodb.put(params).promise();
+  return dynamoDb.put(params).promise();
 }
