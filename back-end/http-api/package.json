@@ -1,5 +1,5 @@
 {
-  "name": "rtk-query-web-socket-back-end",
+  "name": "rtkq-streaming-http-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

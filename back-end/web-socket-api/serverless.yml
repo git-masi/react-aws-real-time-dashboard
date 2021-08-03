@@ -2,15 +2,15 @@ service: rtkq-streaming-web-socket-api
 
 frameworkVersion: '2'
 
+plugins:
+  - serverless-bundle
+
 provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
   websocketsApiName: rtkq-streaming-web-socket-api
   websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
-
-plugins:
-  - serverless-bundle
 
 functions:
   connect:
