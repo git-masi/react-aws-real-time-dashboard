@@ -11,6 +11,36 @@ provider:
   lambdaHashingVersion: 20201221
   websocketsApiName: rtkq-streaming-web-socket-api
   websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
+  environment:
+    CONNECTIONS_TABLE_NAME: !Ref RtkqStreamingConnectionsTable
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - 'dynamodb:Query'
+        - 'dynamodb:Scan'
+        - 'dynamodb:GetItem'
+        - 'dynamodb:PutItem'
+        - 'dynamodb:DeleteItem'
+        - 'dynamodb:UpdateItem'
+      Resource:
+        - !GetAtt RtkqStreamingConnectionsTable.Arn
+        - !Join ['/', [!GetAtt RtkqStreamingConnectionsTable.Arn, 'index', '*']]
+
+resources:
+  Resources:
+    RtkqStreamingConnectionsTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      UpdateReplacePolicy: Retain
+      Properties:
+        TableName: RtkqStreamingConnectionsTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
 
 functions:
   connect:
