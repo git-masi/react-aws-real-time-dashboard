@@ -19,7 +19,7 @@ async function connect(event) {
 function createConnectionItem(event) {
   const {
     headers: { Origin: origin },
-    requestContext: { connectionId, connectedAt, domainName },
+    requestContext: { connectionId, connectedAt, domainName, authorizer },
   } = event;
 
   const item = {
@@ -27,6 +27,7 @@ function createConnectionItem(event) {
     connectedAt: new Date(connectedAt).toISOString(),
     requestOrigin: origin,
     requestDomain: domainName,
+    storeId: authorizer.principalId,
   };
 
   return item;

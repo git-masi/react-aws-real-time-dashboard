@@ -14,6 +14,7 @@ provider:
   environment:
     CONNECTIONS_TABLE_NAME: !Ref RtkqStreamingConnectionsTable
     WS_API_ENDPOINT: ${cf:rtkq-streaming-web-socket-api-dev.ServiceEndpointWebsocket}
+    STORE_ID_INDEX: connectionsStoreId
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -53,9 +54,18 @@ resources:
         AttributeDefinitions:
           - AttributeName: connectionId
             AttributeType: S
+          - AttributeName: storeId
+            AttributeType: S
         KeySchema:
           - AttributeName: connectionId
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: connectionsStoreId
+            KeySchema:
+              - AttributeName: storeId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
 
 functions:
   connect:
@@ -63,10 +73,10 @@ functions:
     events:
       - websocket:
           route: $connect
-          # authorizer:
-          #   name: authorizer
-          #   identitySource:
-          #     - 'route.request.querystring.authorizer'
+          authorizer:
+            name: wsConnectAuthorizer
+            identitySource:
+              - 'route.request.querystring.authorizer'
 
   disconnect:
     handler: web-socket-handlers/disconnect.handler
@@ -95,3 +105,6 @@ functions:
   #   events:
   #     # runs daily at 4am UTC (11pm EST)
   #     - schedule: cron(0 4 * * ? *)
+
+  wsConnectAuthorizer:
+    handler: authorizers/wsConnectAuthorizer.handler
