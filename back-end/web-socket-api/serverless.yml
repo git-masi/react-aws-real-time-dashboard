@@ -1,0 +1,51 @@
+service: rtkq-streaming-web-socket-api
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  websocketsApiName: rtkq-streaming-web-socket-api
+  websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
+
+plugins:
+  - serverless-bundle
+
+functions:
+  connect:
+    handler: web-socket-handlers/connect.handler
+    events:
+      - websocket:
+          route: $connect
+          # authorizer:
+          #   name: authorizer
+          #   identitySource:
+          #     - 'route.request.querystring.authorizer'
+
+  disconnect:
+    handler: web-socket-handlers/disconnect.handler
+    events:
+      - websocket:
+          route: $disconnect
+
+  # KeepConnectionAlive:
+  #   handler: web-socket-handlers/keepConnectionAlive.handler
+  #   events:
+  #     - websocket:
+  #         route: keepAlive
+
+  # handleOrderStream:
+  #   handler: web-socket-handlers/handleOrderStream.handler
+  #   events:
+  #     - stream:
+  #         type: dynamodb
+  #         batchSize: 1
+  #         startingPosition: LATEST
+  #         arn: ${self:provider.environment.transactions_table_stream_arn}
+
+  # tableCleanup:
+  #   handler: web-socket-handlers/tableCleanup.handler
+  #   events:
+  #     # runs daily at 4am UTC (11pm EST)
+  #     - schedule: cron(0 4 * * ? *)
