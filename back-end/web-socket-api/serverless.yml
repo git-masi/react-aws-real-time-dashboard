@@ -36,10 +36,10 @@ resources:
         TableName: RtkqStreamingConnectionsTable
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          - AttributeName: pk
+          - AttributeName: connectionId
             AttributeType: S
         KeySchema:
-          - AttributeName: pk
+          - AttributeName: connectionId
             KeyType: HASH
 
 functions:
