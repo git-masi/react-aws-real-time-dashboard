@@ -1,4 +1,6 @@
 import { DynamoDB } from 'aws-sdk';
+import { isEmpty } from '../utils/data';
+import { sendWebsocketMessage } from '../utils/wsMessage';
 
 export const handler = ordersStream;
 
@@ -6,6 +8,10 @@ async function ordersStream(event) {
   const { newRecord, oldRecord } = getRecordData(event);
   console.log(newRecord);
   console.log(oldRecord);
+
+  if (didStatusChange(newRecord, oldRecord)) {
+    sendWebsocketMessage('connection id', 'some kind of message');
+  }
 }
 
 function getRecordData(event) {
@@ -19,4 +25,10 @@ function getRecordData(event) {
   const oldRecord = converter.unmarshall(OldImage);
 
   return { newRecord, oldRecord };
+}
+
+function didStatusChange(newRecord, oldRecord) {
+  if (isEmpty(oldRecord)) return false;
+
+  return newRecord?.status === oldRecord?.status;
 }

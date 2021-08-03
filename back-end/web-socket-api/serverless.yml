@@ -13,6 +13,7 @@ provider:
   websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
   environment:
     CONNECTIONS_TABLE_NAME: !Ref RtkqStreamingConnectionsTable
+    WS_API_ENDPOINT: ${cf:rtkq-streaming-web-socket-api-dev.ServiceEndpointWebsocket}
   iamRoleStatements:
     - Effect: Allow
       Action:
