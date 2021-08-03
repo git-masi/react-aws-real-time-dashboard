@@ -63,8 +63,12 @@ function handlePostMethods(event) {
   return router(event);
 
   function handleCreateOrder(event) {
-    const { body } = event;
-    return createOrder(body);
+    const {
+      body,
+      requestContext: { authorizer },
+    } = event;
+
+    return createOrder({ ...body, storeId: authorizer.principalId });
   }
 }
 
