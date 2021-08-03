@@ -24,6 +24,10 @@ provider:
         - dynamodb:PutItem
         - dynamodb:GetItem
         - dynamodb:UpdateItem
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
       Resource:
         - !GetAtt RtkqStreamingMainTable.Arn
         - !Join ['/', [!GetAtt RtkqStreamingMainTable.Arn, 'index', '*']]
@@ -58,6 +62,22 @@ resources:
             KeyType: HASH
           - AttributeName: sk
             KeyType: RANGE
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+  Outputs:
+    RtkqStreamingMainTableName:
+      Value: !Ref RtkqStreamingMainTable
+      Export:
+        Name: RtkqStreamingMainTableName
+    RtkqStreamingMainTableArn:
+      Value: !GetAtt RtkqStreamingMainTable.Arn
+      Export:
+        Name: RtkqStreamingMainTableArn
+    RtkqStreamingMainTableStreamArn:
+      Value: !GetAtt RtkqStreamingMainTable.StreamArn
+      Export:
+        Name: RtkqStreamingMainTableStreamArn
 
 functions:
   orders:

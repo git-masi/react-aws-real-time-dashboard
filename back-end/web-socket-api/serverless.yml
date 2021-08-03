@@ -16,22 +16,36 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - 'dynamodb:Query'
-        - 'dynamodb:Scan'
-        - 'dynamodb:GetItem'
-        - 'dynamodb:PutItem'
-        - 'dynamodb:DeleteItem'
-        - 'dynamodb:UpdateItem'
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+        - dynamodb:UpdateItem
       Resource:
         - !GetAtt RtkqStreamingConnectionsTable.Arn
         - !Join ['/', [!GetAtt RtkqStreamingConnectionsTable.Arn, 'index', '*']]
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+        - dynamodb:UpdateItem
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
+      Resource:
+        - ${cf:rtkq-streaming-http-api-dev.RtkqStreamingMainTableArn}
 
 resources:
   Resources:
     RtkqStreamingConnectionsTable:
       Type: AWS::DynamoDB::Table
-      DeletionPolicy: Retain
-      UpdateReplacePolicy: Retain
+      # DeletionPolicy: Retain
+      # UpdateReplacePolicy: Retain
       Properties:
         TableName: RtkqStreamingConnectionsTable
         BillingMode: PAY_PER_REQUEST
@@ -65,14 +79,15 @@ functions:
   #     - websocket:
   #         route: keepAlive
 
-  # handleOrderStream:
-  #   handler: web-socket-handlers/handleOrderStream.handler
-  #   events:
-  #     - stream:
-  #         type: dynamodb
-  #         batchSize: 1
-  #         startingPosition: LATEST
-  #         arn: ${self:provider.environment.transactions_table_stream_arn}
+  ordersStream:
+    handler: stream-handlers/ordersStream.handler
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 1
+          startingPosition: LATEST
+          arn: ${cf:rtkq-streaming-http-api-dev.RtkqStreamingMainTableStreamArn}
+          enabled: true
 
   # tableCleanup:
   #   handler: web-socket-handlers/tableCleanup.handler

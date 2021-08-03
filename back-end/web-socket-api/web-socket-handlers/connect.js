@@ -9,7 +9,7 @@ async function connect(event) {
     await addConnection(connectionItem);
 
     console.info(
-      `New web socket connection ${connectionId} from origin ${origin} added`
+      `New web socket connection ${connectionItem.connectionId} from origin ${connectionItem.requestOrigin} added`
     );
   } catch (error) {
     console.info(error);
