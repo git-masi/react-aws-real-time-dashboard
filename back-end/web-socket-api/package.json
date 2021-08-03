@@ -9,6 +9,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.959.0",
+    "nanoid": "^3.1.23"
+  },
   "devDependencies": {
     "serverless-bundle": "^4.3.1"
   }
