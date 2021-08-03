@@ -5,7 +5,7 @@ export const handler = connect;
 
 async function connect(event) {
   const {
-    headers: { Origin },
+    headers: { Origin: origin },
     requestContext: { connectionId, connectedAt, domainName },
   } = event;
 
@@ -13,9 +13,17 @@ async function connect(event) {
     id: nanoid(),
     connectionId,
     connectedAt: new Date(connectedAt).toISOString(),
-    requestOrigin: Origin,
+    requestOrigin: origin,
     requestDomain: domainName,
   };
 
-  await addConnection(item);
+  try {
+    await addConnection(item);
+
+    console.info(
+      `New web socket connection ${connectionId} from origin ${origin} added`
+    );
+  } catch (error) {
+    console.info(error);
+  }
 }
