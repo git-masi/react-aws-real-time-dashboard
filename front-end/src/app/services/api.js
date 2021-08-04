@@ -28,7 +28,7 @@ export const api = createApi({
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         // create a websocket connection when the cache subscription starts
-        let ws = new WebSocket(
+        const ws = new WebSocket(
           'wss://4kh1b6ad2e.execute-api.us-east-1.amazonaws.com/dev?authorization=98765'
         );
 
