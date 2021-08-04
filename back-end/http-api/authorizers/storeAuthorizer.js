@@ -14,8 +14,7 @@ async function storeAuthorizer(event, context, callback) {
 
     return callback(null, createAllowPolicy(storeId, methodArn));
   } catch (error) {
-    const errorMessage = error?.message ?? error ?? '';
-    if (errorMessage) console.info(errorMessage);
+    console.info(error);
     return callback('Unauthorized');
   }
 }
