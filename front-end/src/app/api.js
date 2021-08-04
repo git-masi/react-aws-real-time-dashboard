@@ -20,12 +20,22 @@ export const api = createApi({
     getOrders: builder.query({
       query: () => 'orders',
       async onCacheEntryAdded(
+        // In the documentation example this arge is a specific "channel"
+        // that the ws is subscribed to
+        // The channel is passed as an argument to the query like so:
+        //    query: (channel) => `path/${channel}`
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         // create a websocket connection when the cache subscription starts
         let ws = new WebSocket(
           'wss://4kh1b6ad2e.execute-api.us-east-1.amazonaws.com/dev?authorization=98765'
+        );
+
+        // This may be where we try some kind of fallback logic or at least display
+        // a toast or something to indicate there was an error with the connection
+        ws.addEventListener('error', () =>
+          console.log('You done messed up A-a-ron!')
         );
 
         try {
@@ -37,17 +47,24 @@ export const api = createApi({
           // update our query result with the received message
           const listener = (event) => {
             const data = JSON.parse(event.data);
-            // if (!isMessage(data) || data.channel !== arg) return
+
+            console.log('data', data);
 
             updateCachedData((draft) => {
-              draft.push(data);
+              const orderIndex = draft.findIndex(
+                (order) => order.sk === data.sk
+              );
+
+              if (orderIndex === -1) {
+                draft.push(data);
+              } else {
+                draft[orderIndex] = data;
+              }
             });
           };
 
           ws.addEventListener('message', listener);
-        } catch (error) {
-          console.log(error);
-          console.info('Error with WebSocket connection');
+        } catch {
           // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
           // in which case `cacheDataLoaded` will throw
         }
