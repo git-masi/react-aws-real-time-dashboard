@@ -1,18 +1,22 @@
 export const handler = storeAuthorizer;
 
 async function storeAuthorizer(event, context, callback) {
+  console.info(event);
+  const { authorizationToken, methodArn } = event;
+
   try {
-    if (typeof event.authorizer === 'undefined') {
+    if (!authorizationToken) {
       throw new Error('Authorization is missing');
     }
 
-    const { authorizer: storeId, methodArn } = event;
+    const token = authorizationToken.replace('Bearer ', '').trim();
 
-    if (storeId !== '98765') {
-      throw new Error('Unauthorized');
+    // Testing only, use JWT in production
+    if (token !== '98765') {
+      throw new Error('Auth token is invalid');
     }
 
-    return callback(null, createAllowPolicy(storeId, methodArn));
+    return callback(null, createAllowPolicy(token, methodArn));
   } catch (error) {
     console.info(error);
     return callback('Unauthorized');
