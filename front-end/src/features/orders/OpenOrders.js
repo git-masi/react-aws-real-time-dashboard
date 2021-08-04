@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGetOrdersQuery } from '../../app/api';
+import { useGetOrdersQuery } from '../../app/services/api';
 
 import {
   Stack,
