@@ -1,4 +1,5 @@
 import { DynamoDB } from 'aws-sdk';
+import { updatedDiff } from 'deep-object-diff';
 import { getItems } from '../../http-api/db/shared';
 import { getConnectionsByStore } from '../db/connections';
 import { isEmpty } from '../utils/data';
@@ -8,31 +9,33 @@ export const handler = ordersStream;
 
 async function ordersStream(event) {
   const { newRecord, oldRecord } = getRecordData(event);
-  // delete after testing
-  console.log(newRecord);
-  console.log(oldRecord);
+  const diff = updatedDiff(oldRecord, newRecord);
+
+  console.info(`diff for ${oldRecord.pk}|${oldRecord.sk}:`, diff);
 
   if (didStatusChange(newRecord, oldRecord)) {
     const connections = getItems(
       await getConnectionsByStore(newRecord.storeId)
     );
 
-    await sendStatusUpdateMessages(connections);
+    await sendStatusUpdateMessages(connections, newRecord);
   }
 
-  function sendStatusUpdateMessages(connections) {
-    const promises = connections.map(({ connectionId, pk, status }) => {
+  function sendStatusUpdateMessages(connections, order) {
+    const promises = connections.map(({ connectionId }) => {
       console.info(
         'Sending status change message via websocket\n',
-        'connectionId',
+        'connectionId:',
         connectionId,
-        'pk',
-        pk,
-        'status',
-        status
+        '\npk:',
+        order.pk,
+        '\nsk:',
+        order.sk,
+        '\nstatus:',
+        order.status
       );
 
-      return sendWebsocketMessage(connectionId, JSON.stringify({ pk, status }));
+      return sendWebsocketMessage(connectionId, JSON.stringify(order));
     });
 
     return Promise.all(promises);
@@ -55,5 +58,5 @@ function getRecordData(event) {
 function didStatusChange(newRecord, oldRecord) {
   if (isEmpty(oldRecord)) return false;
 
-  return newRecord?.status === oldRecord?.status;
+  return newRecord?.status !== oldRecord?.status;
 }
