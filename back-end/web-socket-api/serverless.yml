@@ -68,6 +68,12 @@ resources:
               ProjectionType: ALL
 
 functions:
+  defaultHandler:
+    handler: web-socket-handlers/defaultHandler.handler
+    events:
+      - websocket:
+          route: $default
+
   connect:
     handler: web-socket-handlers/connect.handler
     events:
@@ -76,7 +82,7 @@ functions:
           authorizer:
             name: wsConnectAuthorizer
             identitySource:
-              - 'route.request.querystring.authorizer'
+              - 'route.request.querystring.authorization'
 
   disconnect:
     handler: web-socket-handlers/disconnect.handler
