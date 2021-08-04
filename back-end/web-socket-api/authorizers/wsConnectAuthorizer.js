@@ -1,18 +1,21 @@
 export const handler = wsConnectAuthorizer;
 
 async function wsConnectAuthorizer(event, context) {
+  console.info(event);
+
   try {
     const { queryStringParameters = {}, methodArn } = event;
-    const { authorizer: storeId } = queryStringParameters;
-    const unauthorizedError = new Error('Unauthorized');
+    const { authorization } = queryStringParameters;
 
-    if (!storeId || storeId !== '98765' || !methodArn) throw unauthorizedError;
+    // Testing only, use JWT in production
+    if (!authorization || authorization !== '98765' || !methodArn)
+      throw new Error('Unauthorized');
 
-    const allowPolicy = createAllowPolicy(storeId, methodArn);
+    const allowPolicy = createAllowPolicy(authorization, methodArn);
 
     context.succeed(allowPolicy);
 
-    return storeId;
+    return authorization;
   } catch (error) {
     console.log(error);
     context.fail('Authorizer verification failed');
