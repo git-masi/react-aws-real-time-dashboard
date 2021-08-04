@@ -1,7 +1,7 @@
 // Modules
 import { ApiGatewayManagementApi, Endpoint } from 'aws-sdk';
 
-const WS_API_ENDPOINT = process.env.websocket_api_origin;
+const { WS_API_ENDPOINT } = process.env;
 
 export class WsResponse {
   constructor(statusCode = 200, body) {
@@ -53,5 +53,5 @@ function createManagementApi(domainName) {
 }
 
 function createWebsocketApiEndpoint() {
-  return new Endpoint(WS_API_ENDPOINT);
+  return new Endpoint(WS_API_ENDPOINT.replace('wss', 'https'));
 }
