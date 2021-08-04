@@ -13,11 +13,9 @@ import {
 import { formatUsd } from '../../utils/currency';
 
 export default function OpenOrders() {
-  const {
-    data: orders,
-    error,
-    isLoading,
-  } = useGetOrdersQuery(null, { pollingInterval: 20000 });
+  // Polling example:
+  //    useGetOrdersQuery(null, { pollingInterval: 20000 });
+  const { data: orders, error, isLoading } = useGetOrdersQuery();
 
   console.log(orders);
 
