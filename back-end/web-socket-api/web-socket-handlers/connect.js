@@ -1,8 +1,10 @@
 import { addConnection } from '../db/connections';
+import { WsResponse } from '../utils/wsMessage';
 
 export const handler = connect;
 
 async function connect(event) {
+  console.info(event);
   const connectionItem = createConnectionItem(event);
 
   try {
@@ -11,8 +13,11 @@ async function connect(event) {
     console.info(
       `New web socket connection ${connectionItem.connectionId} from origin ${connectionItem.requestOrigin} added`
     );
+
+    return WsResponse.success();
   } catch (error) {
     console.info(error);
+    return WsResponse.serverError();
   }
 }
 

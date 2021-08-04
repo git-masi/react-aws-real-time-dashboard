@@ -3,6 +3,27 @@ import { ApiGatewayManagementApi, Endpoint } from 'aws-sdk';
 
 const WS_API_ENDPOINT = process.env.websocket_api_origin;
 
+export class WsResponse {
+  constructor(statusCode = 200, body) {
+    this.statusCode = statusCode;
+    this.headers = {
+      'Content-Type': 'text/plain',
+    };
+
+    if (body) {
+      this.body = body;
+    }
+  }
+
+  static success(body) {
+    return new WsResponse(200, body);
+  }
+
+  static serverError() {
+    return new WsResponse(500, 'Something went wrong with the server');
+  }
+}
+
 export async function sendWebsocketMessage(
   connectionId,
   message,
