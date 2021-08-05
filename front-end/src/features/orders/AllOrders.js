@@ -9,6 +9,7 @@ import {
   AlertTitle,
   Paper,
   Container,
+  Button,
 } from '@material-ui/core';
 import { formatUsd } from '../../utils/currency';
 
@@ -19,6 +20,7 @@ export default function AllOrders() {
     data: orders,
     error,
     isLoading,
+    refetch,
   } = useGetOrdersQuery(null, {
     refetchOnReconnect: true,
     // refetchOnFocus: true,
@@ -39,6 +41,14 @@ export default function AllOrders() {
         padding: '1rem',
       }}
     >
+      <Button
+        onClick={refetch}
+        variant="contained"
+        sx={{ marginBottom: '1rem' }}
+      >
+        refetch data
+      </Button>
+
       {isLoading ? (
         <CircularProgress />
       ) : error ? (
