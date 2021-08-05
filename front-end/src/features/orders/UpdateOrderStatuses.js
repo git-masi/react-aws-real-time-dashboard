@@ -1,5 +1,8 @@
 import React from 'react';
-import { useGetOrdersQuery } from '../../app/services/api';
+import {
+  useGetOrdersQuery,
+  useUpdateOrderMutation,
+} from '../../app/services/api';
 import { formatUsd } from '../../utils/currency';
 import {
   Stack,
@@ -10,26 +13,23 @@ import {
   Paper,
   Container,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 
-export default function AllOrders() {
-  // Polling example:
-  //    useGetOrdersQuery(null, { pollingInterval: 20000 });
-  const {
-    data: orders,
-    error,
-    isLoading,
-    refetch,
-  } = useGetOrdersQuery(null, {
-    refetchOnReconnect: true,
-    refetchOnFocus: true,
-    // refetchOnMountOrArgChange: true,
-    // ^^^ Set this to refetch (and re-init ws) on mount
-    // the default behavior is to check if cache exists and avoid re-fetching if it does
-  });
+export const orderStatuses = Object.freeze({
+  open: 'open',
+  cancelled: 'cancelled',
+  paid: 'paid',
+});
+
+export default function UpdateOrderStatuses() {
+  const { data: orders, error, isLoading, refetch } = useGetOrdersQuery();
 
   console.log(
-    '%cAllOrders component cache subscription:',
+    '%cUpdateOrderStatuses component cache subscription:',
     'color: goldenrod',
     orders
   );
@@ -74,12 +74,40 @@ export default function AllOrders() {
 
 function Order(props) {
   const { order } = props;
+  const [
+    updatePost, // This is the mutation trigger
+    { isLoading: isUpdating }, // This is the destructured mutation result
+  ] = useUpdateOrderMutation();
+
+  const handleChange = (e) => {
+    const { value: status } = e.target;
+    updatePost({ ...order, status });
+  };
 
   return (
     <Paper elevation={2} sx={{ padding: '.5rem' }}>
       <Stack spacing={1}>
         <h3>{`${order.firstName} ${order.lastName}`}</h3>
-        <p>Order Status: {order.status}</p>
+        {isUpdating ? (
+          <CircularProgress />
+        ) : (
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Order Status</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={order.status}
+              label="Order Status"
+              onChange={handleChange}
+            >
+              {Object.values(orderStatuses).map((status) => (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
         <p>Total: {formatUsd(order.total)}</p>
         <p>Created: {order.created.split('T')[0]}</p>
       </Stack>

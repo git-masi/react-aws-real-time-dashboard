@@ -8,10 +8,12 @@ import {
   Stack,
 } from '@material-ui/core';
 import AllOrders from './features/orders/AllOrders';
+import UpdateOrderStatuses from './features/orders/UpdateOrderStatuses';
 
 const views = Object.freeze({
   none: 'none',
   allOrders: 'allOrders',
+  updateStatuses: 'updateStatuses',
 });
 
 export default function App() {
@@ -34,7 +36,7 @@ export default function App() {
   };
 
   useIdleTimer({
-    timeout: 1000 * 15,
+    timeout: 1000 * 60 * 15,
     onIdle: () => {
       console.log('the user is idle');
       setView(views.none);
@@ -64,8 +66,13 @@ export default function App() {
   return (
     <Container maxWidth="md">
       <Nav setView={setView} />
+
       {display === views.none && <h1>Nothing to see here</h1>}
+
       {display === views.allOrders && <AllOrders />}
+
+      {display === views.updateStatuses && <UpdateOrderStatuses />}
+
       {showActiveDialog && (
         <Dialog open={showActiveDialog}>
           <DialogTitle>Set Yourself To Active?</DialogTitle>
