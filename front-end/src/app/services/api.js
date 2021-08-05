@@ -19,6 +19,9 @@ export const api = createApi({
   endpoints: (builder) => ({
     getOrders: builder.query({
       query: () => 'orders',
+      // keepUnusedDataFor configuration for an individual endpoint, overriding the api setting (if it exists)
+      // when the time expires the component will unsubscribe which will have the side effect or closing the WebSocket
+      keepUnusedDataFor: 5,
       async onCacheEntryAdded(
         // In the documentation example this arge is a specific "channel"
         // that the ws is subscribed to
