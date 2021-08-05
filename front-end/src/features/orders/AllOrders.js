@@ -23,13 +23,17 @@ export default function AllOrders() {
     refetch,
   } = useGetOrdersQuery(null, {
     refetchOnReconnect: true,
-    // refetchOnFocus: true,
+    refetchOnFocus: true,
     // refetchOnMountOrArgChange: true,
     // ^^^ Set this to refetch (and re-init ws) on mount
     // the default behavior is to check if cache exists and avoid re-fetching if it does
   });
 
-  console.log(orders);
+  console.log(
+    '%cAllOrders component cache subscription:',
+    'color: goldenrod',
+    orders
+  );
 
   return (
     <Container

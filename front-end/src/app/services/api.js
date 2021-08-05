@@ -18,7 +18,10 @@ export const api = createApi({
   }),
   endpoints: (builder) => ({
     getOrders: builder.query({
-      query: () => 'orders',
+      query: () => {
+        console.log('%cfetching orders', 'color: darkSeaGreen');
+        return 'orders';
+      },
       // keepUnusedDataFor configuration for an individual endpoint, overriding the api setting (if it exists)
       // when the time expires the component will unsubscribe which will have the side effect or closing the WebSocket
       keepUnusedDataFor: 5,
@@ -38,15 +41,15 @@ export const api = createApi({
         // This may be where we try some kind of fallback logic or at least display
         // a toast or something to indicate there was an error with the connection
         ws.addEventListener('error', () =>
-          console.log('You done messed up A-a-ron!')
+          console.log('%cYou done messed up A-a-ron!', 'color: tomato')
         );
 
         ws.addEventListener('open', () => {
-          console.log('The WebSocket is open!');
+          console.log('%cWebSocket open', 'color: cornflowerBlue');
         });
 
         ws.addEventListener('close', () => {
-          console.log('The WebSocket is closed!');
+          console.log('%cWebSocket closed', 'color: coral');
         });
 
         try {
