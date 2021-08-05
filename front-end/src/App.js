@@ -10,6 +10,18 @@ const views = Object.freeze({
 export default function App() {
   const [display, setDisplay] = useState(views.none);
 
+  React.useEffect(() => {
+    function handleVisibilityChange() {
+      console.log('visibility state:', document.visibilityState);
+    }
+
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
   return (
     <Container maxWidth="md">
       <Nav setView={setDisplay} />
