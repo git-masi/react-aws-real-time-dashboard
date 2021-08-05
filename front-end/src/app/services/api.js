@@ -91,11 +91,22 @@ export const api = createApi({
     createOrder: builder.mutation({
       query: (body) => ({
         url: 'orders',
-        method: 'PUT',
+        method: 'POST',
+        body,
+      }),
+    }),
+    updateOrder: builder.mutation({
+      query: (body) => ({
+        url: 'orders',
+        method: 'PATCH',
         body,
       }),
     }),
   }),
 });
 
-export const { useGetOrdersQuery, useCreateOrderMutation } = api;
+export const {
+  useGetOrdersQuery,
+  useCreateOrderMutation,
+  useUpdateOrderMutation,
+} = api;
