@@ -15,7 +15,17 @@ import { formatUsd } from '../../utils/currency';
 export default function AllOrders() {
   // Polling example:
   //    useGetOrdersQuery(null, { pollingInterval: 20000 });
-  const { data: orders, error, isLoading } = useGetOrdersQuery();
+  const {
+    data: orders,
+    error,
+    isLoading,
+  } = useGetOrdersQuery(null, {
+    refetchOnReconnect: true,
+    // refetchOnFocus: true,
+    // refetchOnMountOrArgChange: true,
+    // ^^^ Set this to refetch (and re-init ws) on mount
+    // the default behavior is to check if cache exists and avoid re-fetching if it does
+  });
 
   console.log(orders);
 
