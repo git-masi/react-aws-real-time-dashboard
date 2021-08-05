@@ -1,6 +1,6 @@
 import React from 'react';
-import OpenOrders from './features/orders/OpenOrders';
+import AllOrders from './features/orders/AllOrders';
 
 export default function App() {
-  return <OpenOrders />;
+  return <AllOrders />;
 }

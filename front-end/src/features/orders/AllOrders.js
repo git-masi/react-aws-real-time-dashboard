@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { formatUsd } from '../../utils/currency';
 
-export default function OpenOrders() {
+export default function AllOrders() {
   // Polling example:
   //    useGetOrdersQuery(null, { pollingInterval: 20000 });
   const { data: orders, error, isLoading } = useGetOrdersQuery();
