@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 import {
   Button,
@@ -17,7 +17,7 @@ const views = Object.freeze({
 export default function App() {
   const [display, setDisplay] = useState(views.none);
   const [showActiveDialog, setShowActiveDialog] = useState(false);
-  const previousView = React.useRef(null);
+  const previousView = useRef(null);
 
   const toggleActiveDialog = () => setShowActiveDialog((prev) => !prev);
 
@@ -49,7 +49,7 @@ export default function App() {
     debounce: 500,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     function handleVisibilityChange() {
       console.log('visibility state:', document.visibilityState);
     }
