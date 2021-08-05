@@ -38,6 +38,14 @@ export const api = createApi({
           console.log('You done messed up A-a-ron!')
         );
 
+        ws.addEventListener('open', () => {
+          console.log('The WebSocket is open!');
+        });
+
+        ws.addEventListener('close', () => {
+          console.log('The WebSocket is closed!');
+        });
+
         try {
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
