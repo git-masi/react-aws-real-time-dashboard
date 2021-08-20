@@ -10,6 +10,10 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  deploymentBucket:
+    name: ${self:custom.sharedBucketName}
+  deploymentPrefix: ${self:custom.basename}
   lambdaHashingVersion: 20201221
   memorySize: 256
   environment:
@@ -33,6 +37,8 @@ provider:
         - !Join ['/', [!GetAtt RtkqStreamingMainTable.Arn, 'index', '*']]
 
 custom:
+  basename: ${self:service}-${self:provider.stage}
+  sharedBucketName: eric-experiments-k9xjhbjk3r4s
   serverless-offline:
     httpPort: 4321
 
