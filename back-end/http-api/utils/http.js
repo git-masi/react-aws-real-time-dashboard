@@ -9,13 +9,15 @@ export const httpMethods = Object.freeze({
 });
 
 export class HttpError extends Error {
-  constructor(statusCode = 500, body) {
+  constructor(statusCode = 500, message) {
     super();
     this.statusCode = statusCode;
-    this.body = body;
+    this.message = message;
   }
 
-  static BadRequest = (body) => new HttpError(400, body);
+  static BadRequest = (message) => {
+    throw new HttpError(400, message);
+  };
 }
 
 export function apiResponse(config = {}) {
@@ -47,7 +49,7 @@ export function apiResponse(config = {}) {
               whitelist
             )}`
           );
-          throw new HttpError(400);
+          HttpError.BadRequest();
         }
       } else {
         response.headers = {
