@@ -95,6 +95,97 @@ export function apiResponse(config = {}) {
   }
 }
 
+export class HttpError extends Error {
+  constructor(statusCode = 500, message = '') {
+    super();
+    this.statusCode = statusCode;
+    this.message = message;
+  }
+
+  static badRequest(message) {
+    throw new HttpError(400, message);
+  }
+}
+
+// Refactor ideas
+//
+// export function apiResponse(config = {}) {
+//   const {
+//     statusCode = 200,
+//     cors = false,
+//     event,
+//     whitelist,
+//     headers = {},
+//     body,
+//   } = config;
+
+//   try {
+//     const hasEvent = event?.constructor?.name === 'Object';
+//     const hasWhitelist = whitelist instanceof Array && whitelist.length > 0;
+//     const hasHeaders = headers?.constructor?.name === 'Object';
+//     let response = {
+//       statusCode,
+//     };
+
+//     if (hasHeaders) {
+//       response = { ...response, headers };
+//     }
+
+//     if (hasEvent && hasWhitelist) {
+//       const origin = event?.headers?.origin ?? '';
+//       const validOrigin = origin && whitelist.includes(origin);
+
+//       if (!validOrigin) {
+//         console.info(
+//           `request origin not in whitelist\norigin: ${origin}\nwhitelist: ${JSON.stringify(
+//             whitelist
+//           )}`
+//         );
+
+//         HttpError.badRequest();
+//       }
+
+//       response = enableCors(response, origin);
+//     } else if (cors) {
+//       response = enableCors(response);
+//     }
+
+//     if (body) {
+//       response = { ...response, body: getBody() };
+//     }
+
+//     return response;
+//   } catch (error) {
+//     console.info(error);
+
+//     if (error instanceof HttpError) return cors ? enableCors(error) : error;
+
+//     const response = new HttpError();
+
+//     return cors ? enableCors(response) : response;
+//   }
+
+//   function enableCors(response, origin) {
+//     return {
+//       ...response,
+//       headers: {
+//         ...(response?.headers ?? {}),
+//         'Access-Control-Allow-Origin': origin ? origin : '*',
+//       },
+//     };
+//   }
+
+//   function getBody() {
+//     if (body?.constructor?.name === 'Object' || body instanceof Array) {
+//       return JSON.stringify(body);
+//     }
+
+//     if (typeof body === 'string') {
+//       return body;
+//     }
+//   }
+// }
+
 function validateApiResponseConfig(config) {
   const { statusCode = 200, cors = false, event, whitelist, headers } = config;
 
