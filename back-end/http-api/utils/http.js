@@ -35,6 +35,7 @@ export function apiResponse(config = {}) {
 
     const response = { statusCode };
 
+    // refactor this
     if (cors) {
       if (event && whitelist) {
         const origin = event?.headers?.origin ?? '';
@@ -86,6 +87,7 @@ export function apiResponse(config = {}) {
     return response;
   } catch (error) {
     console.info(error);
+    // error may need cors enabled
     if (error instanceof HttpError) return error;
     return {
       statusCode: 500,
