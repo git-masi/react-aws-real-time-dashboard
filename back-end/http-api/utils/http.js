@@ -86,7 +86,7 @@ export function apiResponse(config = {}) {
     return response;
   } catch (error) {
     console.info(error);
-    if (error instanceof HttpError) return { ...error };
+    if (error instanceof HttpError) return error;
     return {
       statusCode: 500,
     };
