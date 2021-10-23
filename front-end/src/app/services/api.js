@@ -1,9 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+// Ideally these would be env vars
+const httpApiEndpoint =
+  'https://6m4vgo3xib.execute-api.us-east-1.amazonaws.com/dev';
+const websocketEndpoint =
+  'wss://8h4eleat4f.execute-api.us-east-1.amazonaws.com/dev';
+
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://ewpm8v8dp4.execute-api.us-east-1.amazonaws.com/dev/',
+    baseUrl: httpApiEndpoint,
     prepareHeaders: (headers, { getState }) => {
       // By default, if we have a token in the store, let's use that for authenticated requests
       // const token = (getState()).auth.token
@@ -34,9 +40,7 @@ export const api = createApi({
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         // create a websocket connection when the cache subscription starts
-        const ws = new WebSocket(
-          'wss://4kh1b6ad2e.execute-api.us-east-1.amazonaws.com/dev?authorization=98765'
-        );
+        const ws = new WebSocket(`${websocketEndpoint}?authorization=98765`);
 
         // This may be where we try some kind of fallback logic or at least display
         // a toast or something to indicate there was an error with the connection
