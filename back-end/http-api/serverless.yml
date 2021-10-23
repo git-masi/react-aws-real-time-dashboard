@@ -12,7 +12,7 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   deploymentBucket:
-    name: ${self:custom.sharedBucketName}
+    name: ${self:custom.shared.deploymentBucket}
   deploymentPrefix: ${self:custom.basename}
   lambdaHashingVersion: 20201221
   memorySize: 256
@@ -40,7 +40,7 @@ provider:
 
 custom:
   basename: ${self:service}-${self:provider.stage}
-  sharedBucketName: eric-experiments-k9xjhbjk3r4s
+  shared: ${file(../serverless.common.yml):shared}
 
 functions:
   orders:

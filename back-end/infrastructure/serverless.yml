@@ -9,12 +9,12 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   deploymentBucket:
-    name: ${self:custom.sharedBucketName}
+    name: ${self:custom.shared.deploymentBucket}
   deploymentPrefix: ${self:custom.basename}
 
 custom:
   basename: ${self:service}-${self:provider.stage}
-  sharedBucketName: eric-experiments-k9xjhbjk3r4s
+  shared: ${file(../serverless.common.yml):shared}
 
 resources:
   Resources:
