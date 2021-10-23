@@ -82,6 +82,10 @@ resources:
       Value: !GetAtt RtkqStreamingMain.StreamArn
       Export:
         Name: RtkqStreamingMainStreamArn
+    RtkqStreamingMainIndexArns:
+      Value: !Join ['/', [!GetAtt RtkqStreamingMain.Arn, 'index', '*']]
+      Export:
+        Name: RtkqStreamingMainIndexArns
     RtkqStreamingConnectionsName:
       Value: !Ref RtkqStreamingConnections
       Export:
