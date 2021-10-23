@@ -1,12 +1,12 @@
 import { name, commerce } from 'faker';
 import { randomInt } from 'd3-random';
-import { createOrder } from '../db/orders';
+import { addOrder } from '../db/orders';
 
 const TEST_STORE_ID = '98765';
 
-export const handler = fakeOrders;
+export const handler = createFakeOrders;
 
-async function fakeOrders() {
+async function createFakeOrders() {
   try {
     const order = {
       firstName: name.firstName(),
@@ -16,7 +16,7 @@ async function fakeOrders() {
     };
     order.total = order.items.reduce((acc, item) => acc + item.price, 0);
 
-    await createOrder(order);
+    await addOrder(order);
   } catch (error) {
     console.info(error);
   }

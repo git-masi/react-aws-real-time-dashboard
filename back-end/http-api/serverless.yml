@@ -41,8 +41,6 @@ provider:
 custom:
   basename: ${self:service}-${self:provider.stage}
   sharedBucketName: eric-experiments-k9xjhbjk3r4s
-  serverless-offline:
-    httpPort: 4321
 
 resources:
   Resources:
@@ -120,8 +118,8 @@ functions:
           #   schema:
           #     application/json: ${file(schema/createOrder.json)}
 
-  fakeOrders:
-    handler: cron-handlers/fakeOrders.handler
+  createFakeOrders:
+    handler: cron-handlers/createFakeOrders.handler
     events:
       - schedule:
           rate: rate(1 minute)
