@@ -6,8 +6,6 @@ projectDir: ../
 
 plugins:
   - serverless-bundle
-  - serverless-offline
-  - serverless-cloudside-plugin
 
 provider:
   name: aws
