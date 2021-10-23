@@ -25,7 +25,7 @@ async function clients(event) {
   }
 }
 
-function findFakeOrderRule() {
+async function findFakeOrderRule() {
   const params = {
     EventBusName: 'default',
     NamePrefix: SERVICE_NAME,
