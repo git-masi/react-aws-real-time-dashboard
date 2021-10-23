@@ -42,49 +42,6 @@ custom:
   basename: ${self:service}-${self:provider.stage}
   sharedBucketName: eric-experiments-k9xjhbjk3r4s
 
-resources:
-  Resources:
-    GatewayResponseDefault4XX:
-      Type: 'AWS::ApiGateway::GatewayResponse'
-      Properties:
-        ResponseParameters:
-          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-        ResponseType: DEFAULT_4XX
-        RestApiId:
-          Ref: 'ApiGatewayRestApi'
-    RtkqStreamingMainTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: RtkqStreamingMainTable
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: pk
-            AttributeType: S
-          - AttributeName: sk
-            AttributeType: S
-        KeySchema:
-          - AttributeName: pk
-            KeyType: HASH
-          - AttributeName: sk
-            KeyType: RANGE
-        StreamSpecification:
-          StreamViewType: NEW_AND_OLD_IMAGES
-
-  Outputs:
-    RtkqStreamingMainTableName:
-      Value: !Ref RtkqStreamingMainTable
-      Export:
-        Name: RtkqStreamingMainTableName
-    RtkqStreamingMainTableArn:
-      Value: !GetAtt RtkqStreamingMainTable.Arn
-      Export:
-        Name: RtkqStreamingMainTableArn
-    RtkqStreamingMainTableStreamArn:
-      Value: !GetAtt RtkqStreamingMainTable.StreamArn
-      Export:
-        Name: RtkqStreamingMainTableStreamArn
-
 functions:
   orders:
     handler: api-handlers/orders.handler
