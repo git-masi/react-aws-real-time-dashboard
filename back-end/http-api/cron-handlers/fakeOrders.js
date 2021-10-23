@@ -23,7 +23,7 @@ async function fakeOrders() {
 }
 
 function createItems() {
-  const maxFive = randomInt(5);
+  const maxFive = randomInt(1, 5);
   const numItems = maxFive();
   const items = [];
 
