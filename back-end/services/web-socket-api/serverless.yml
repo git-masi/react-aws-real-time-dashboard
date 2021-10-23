@@ -2,7 +2,7 @@ service: rtkq-streaming-web-socket-api
 
 frameworkVersion: '2'
 
-projectDir: ../
+projectDir: ../../
 
 plugins:
   - serverless-bundle
