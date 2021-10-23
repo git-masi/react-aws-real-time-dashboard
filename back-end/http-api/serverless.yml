@@ -107,8 +107,10 @@ functions:
 
   fakeOrders:
     handler: cron-handlers/fakeOrders.handler
-    # events:
-    #   - schedule: rate(1 minute)
+    events:
+      - schedule:
+          rate: rate(1 minute)
+          enabled: false
 
   storeAuthorizer:
     handler: authorizers/storeAuthorizer.handler
