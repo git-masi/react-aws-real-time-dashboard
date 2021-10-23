@@ -2,6 +2,8 @@ service: rtkq-streaming-http-api
 
 frameworkVersion: '2'
 
+projectDir: ../
+
 plugins:
   - serverless-bundle
   - serverless-offline
@@ -104,6 +106,19 @@ functions:
           request:
             schema:
               application/json: ${file(schema/createOrder.json)}
+
+  clients:
+    handler: api-handlers/clients.handler
+    events:
+      - http:
+          method: POST
+          path: clients
+          cors: true
+          # authorizer:
+          #   name: storeAuthorizer
+          # request:
+          #   schema:
+          #     application/json: ${file(schema/createOrder.json)}
 
   fakeOrders:
     handler: cron-handlers/fakeOrders.handler
