@@ -7,6 +7,7 @@ export const eventBridgeRuleOperations = Object.freeze({
   remove: 'deleteRule',
   enable: 'enableRule',
   disable: 'disableRule',
+  list: 'listRules',
 });
 
 export const eventBridge = {
