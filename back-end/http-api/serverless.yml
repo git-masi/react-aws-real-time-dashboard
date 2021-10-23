@@ -19,6 +19,8 @@ provider:
   lambdaHashingVersion: 20201221
   memorySize: 256
   environment:
+    SERVICE_NAME: ${self:service}
+    BASE_NAME: ${self:custom.basename}
     MAIN_TABLE_NAME: !Ref RtkqStreamingMainTable
   apiGateway:
     shouldStartNameWithService: true
