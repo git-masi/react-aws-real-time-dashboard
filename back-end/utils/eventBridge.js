@@ -10,12 +10,7 @@ export const eventBridgeRuleOperations = Object.freeze({
 });
 
 export const eventBridge = {
-  rule(operation, ruleName, eventBusName) {
-    const params = {
-      Name: ruleName, // required
-      EventBusName: eventBusName,
-    };
-
+  rule(operation, params) {
     return eb[operation]?.(params).promise();
   },
 };
