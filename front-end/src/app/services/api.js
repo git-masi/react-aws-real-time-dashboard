@@ -26,7 +26,7 @@ export const api = createApi({
     getOrders: builder.query({
       query: () => {
         console.log('%cfetching orders', 'color: darkSeaGreen');
-        return { url: 'orders' };
+        return { url: 'orders?asc=false' };
       },
       // keepUnusedDataFor configuration for an individual endpoint, overriding the api setting (if it exists)
       // when the time expires the component will unsubscribe which will have the side effect or closing the WebSocket
