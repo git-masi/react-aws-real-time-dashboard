@@ -1,2 +1,12 @@
+stacks:
+  infrastructure: ${cf:rtkq-streaming-infrastructure-${self:provider.stage}}
+
 shared:
   deploymentBucket: eric-experiments-k9xjhbjk3r4s
+  resources:
+    mainTableName: ${cf:rtkq-streaming-infrastructure-${self:provider.stage}.RtkqStreamingMainName}
+    mainTableArn: ${cf:rtkq-streaming-infrastructure-${self:provider.stage}.RtkqStreamingMainArn}
+    mainTableStreamArn: ${cf:rtkq-streaming-infrastructure-${self:provider.stage}.RtkqStreamingMainStreamArn}
+    mainTableIndexArns: ${cf:rtkq-streaming-infrastructure-${self:provider.stage}.RtkqStreamingMainIndexArns}
+    connectionsTableName: ${cf:rtkq-streaming-infrastructure-${self:provider.stage}.RtkqStreamingConnectionsName}
+    connectionsTableArn: ${cf:rtkq-streaming-infrastructure-${self:provider.stage}.RtkqStreamingConnectionsArn}

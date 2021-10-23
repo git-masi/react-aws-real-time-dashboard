@@ -19,24 +19,19 @@ provider:
   environment:
     SERVICE_NAME: ${self:service}
     BASE_NAME: ${self:custom.basename}
-    MAIN_TABLE_NAME: !Ref RtkqStreamingMainTable
+    MAIN_TABLE_NAME: ${self:custom.shared.resources.mainTableName}
   apiGateway:
     shouldStartNameWithService: true
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:Scan
         - dynamodb:Query
         - dynamodb:PutItem
-        - dynamodb:GetItem
         - dynamodb:UpdateItem
-        - dynamodb:DescribeStream
-        - dynamodb:GetRecords
-        - dynamodb:GetShardIterator
-        - dynamodb:ListStreams
+        - dynamodb:DeleteItem
       Resource:
-        - !GetAtt RtkqStreamingMainTable.Arn
-        - !Join ['/', [!GetAtt RtkqStreamingMainTable.Arn, 'index', '*']]
+        - ${self:custom.shared.resources.mainTableArn}
+        - ${self:custom.shared.resources.mainTableIndexArns}
 
 custom:
   basename: ${self:service}-${self:provider.stage}
