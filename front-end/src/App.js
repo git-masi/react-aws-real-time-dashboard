@@ -24,19 +24,7 @@ export default function App() {
 
   const toggleActiveDialog = () => setShowActiveDialog((prev) => !prev);
 
-  const setView = (newView) =>
-    setDisplay((prev) => {
-      previousView.current = prev;
-      return newView;
-    });
-
-  const showPreviousView = () => {
-    const { current } = previousView;
-    toggleActiveDialog();
-    setDisplay(current ? current : views.none);
-  };
-
-  useIdleTimer({
+  const { isIdle, pause, resume } = useIdleTimer({
     timeout: 1000 * 60 * 15,
     onIdle: () => {
       console.log('the user is idle');
@@ -50,6 +38,27 @@ export default function App() {
       console.log('the user took some action');
     },
     debounce: 500,
+  });
+
+  const setView = (newView) =>
+    setDisplay((prev) => {
+      previousView.current = prev;
+      return newView;
+    });
+
+  const showPreviousView = () => {
+    const { current } = previousView;
+    toggleActiveDialog();
+    setDisplay(current ? current : views.none);
+  };
+
+  const setToActive = () => {
+    showPreviousView();
+    resume();
+  };
+
+  useEffect(() => {
+    if (isIdle()) pause();
   });
 
   useEffect(() => {
@@ -77,7 +86,7 @@ export default function App() {
       {showActiveDialog && (
         <Dialog open={showActiveDialog}>
           <DialogTitle>Set Yourself To Active?</DialogTitle>
-          <Button onClick={showPreviousView}>Yes</Button>
+          <Button onClick={setToActive}>Yes</Button>
         </Dialog>
       )}
     </Container>
