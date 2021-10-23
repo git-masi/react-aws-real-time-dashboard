@@ -19,6 +19,7 @@ provider:
     CONNECTIONS_TABLE_NAME: !Ref RtkqStreamingConnectionsTable
     # The way this is used we need the https endpoint not the wss endpoint
     # figure out a way to manage that in the future
+    # WS_API_ENDPOINT: '' # This is used for the initial deploy when rtkq-streaming-web-socket-api doesn't exist
     WS_API_ENDPOINT: ${cf:rtkq-streaming-web-socket-api-${self:provider.stage}.ServiceEndpointWebsocket}
     STORE_ID_INDEX: connectionsStoreId
   iamRoleStatements:
