@@ -95,18 +95,6 @@ export function apiResponse(config = {}) {
   }
 }
 
-export class HttpError extends Error {
-  constructor(statusCode = 500, message = '') {
-    super();
-    this.statusCode = statusCode;
-    this.message = message;
-  }
-
-  static badRequest(message) {
-    throw new HttpError(400, message);
-  }
-}
-
 // Refactor ideas
 //
 // export function apiResponse(config = {}) {
