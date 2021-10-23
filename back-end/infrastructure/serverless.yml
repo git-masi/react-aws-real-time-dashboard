@@ -28,10 +28,11 @@ resources:
     #     ResponseType: DEFAULT_4XX
     #     RestApiId:
     #       Ref: 'ApiGatewayRestApi'
-    RtkqStreamingMainTable:
+
+    RtkqStreamingMain:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: RtkqStreamingMainTable
+        TableName: RtkqStreamingMain-${self:provider.stage}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: pk
@@ -46,16 +47,46 @@ resources:
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
 
+    RtkqStreamingConnections:
+      Type: AWS::DynamoDB::Table
+      # DeletionPolicy: Retain
+      # UpdateReplacePolicy: Retain
+      Properties:
+        TableName: RtkqStreamingConnections-${self:provider.stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            # pk = "CONNECTION"
+            AttributeType: S
+          - AttributeName: sk
+            # sk is composite
+            #   WEB_SOCKET_CONNECTION_ID#fakeId1234567890
+            #   CLIENT_ID#54321
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
   Outputs:
-    RtkqStreamingMainTableName:
-      Value: !Ref RtkqStreamingMainTable
+    RtkqStreamingMainName:
+      Value: !Ref RtkqStreamingMain
       Export:
-        Name: RtkqStreamingMainTableName
-    RtkqStreamingMainTableArn:
-      Value: !GetAtt RtkqStreamingMainTable.Arn
+        Name: RtkqStreamingMainName
+    RtkqStreamingMainArn:
+      Value: !GetAtt RtkqStreamingMain.Arn
       Export:
-        Name: RtkqStreamingMainTableArn
-    RtkqStreamingMainTableStreamArn:
-      Value: !GetAtt RtkqStreamingMainTable.StreamArn
+        Name: RtkqStreamingMainArn
+    RtkqStreamingMainStreamArn:
+      Value: !GetAtt RtkqStreamingMain.StreamArn
       Export:
-        Name: RtkqStreamingMainTableStreamArn
+        Name: RtkqStreamingMainStreamArn
+    RtkqStreamingConnectionsName:
+      Value: !Ref RtkqStreamingConnections
+      Export:
+        Name: RtkqStreamingConnectionsName
+    RtkqStreamingConnectionsArn:
+      Value: !GetAtt RtkqStreamingConnections.Arn
+      Export:
+        Name: RtkqStreamingConnectionsArn

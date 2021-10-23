@@ -12,9 +12,11 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   deploymentBucket:
-    name: ${self:custom.sharedBucketName}
+    name: ${self:custom.shared.deploymentBucket}
   deploymentPrefix: ${self:custom.basename}
   lambdaHashingVersion: 20201221
+  apiGateway:
+    shouldStartNameWithService: true
   websocketsApiName: rtkq-streaming-web-socket-api
   websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
   environment:
@@ -53,32 +55,7 @@ provider:
 
 custom:
   basename: ${self:service}-${self:provider.stage}
-  sharedBucketName: eric-experiments-k9xjhbjk3r4s
-
-resources:
-  Resources:
-    RtkqStreamingConnectionsTable:
-      Type: AWS::DynamoDB::Table
-      # DeletionPolicy: Retain
-      # UpdateReplacePolicy: Retain
-      Properties:
-        TableName: RtkqStreamingConnectionsTable
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: connectionId
-            AttributeType: S
-          - AttributeName: storeId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: connectionId
-            KeyType: HASH
-        GlobalSecondaryIndexes:
-          - IndexName: connectionsStoreId
-            KeySchema:
-              - AttributeName: storeId
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
+  shared: ${file(../serverless.common.yml):shared}
 
 functions:
   defaultHandler:
