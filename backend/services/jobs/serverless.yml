@@ -1,0 +1,29 @@
+service: rtkq-streaming-jobs
+
+frameworkVersion: '2'
+
+projectDir: ../../
+
+plugins:
+  - serverless-bundle
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  deploymentBucket:
+    name: ${self:custom.shared.deploymentBucket}
+  deploymentPrefix: ${self:custom.basename}
+  lambdaHashingVersion: 20201221
+
+custom:
+  basename: ${self:service}-${self:provider.stage}
+  shared: ${file(../../serverless.common.yml):shared}
+
+functions:
+  createFakeOrders:
+    handler: cron-handlers/createFakeOrders.handler
+    events:
+      - schedule:
+          rate: rate(1 minute)
+          enabled: false

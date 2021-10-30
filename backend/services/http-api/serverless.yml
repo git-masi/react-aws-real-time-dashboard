@@ -70,12 +70,5 @@ functions:
           #   schema:
           #     application/json: ${file(schema/createOrder.json)}
 
-  createFakeOrders:
-    handler: cron-handlers/createFakeOrders.handler
-    events:
-      - schedule:
-          rate: rate(1 minute)
-          enabled: false
-
   storeAuthorizer:
     handler: authorizers/storeAuthorizer.handler
