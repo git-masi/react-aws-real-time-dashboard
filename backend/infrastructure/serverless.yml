@@ -1,4 +1,4 @@
-service: rtkq-streaming-infrastructure
+service: rardash-infrastructure
 
 frameworkVersion: '2'
 

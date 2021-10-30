@@ -1,4 +1,4 @@
-service: rtkq-streaming-jobs
+service: rardash-jobs
 
 frameworkVersion: '2'
 
