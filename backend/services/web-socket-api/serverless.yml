@@ -55,7 +55,7 @@ provider:
 
 custom:
   basename: ${self:service}-${self:provider.stage}
-  shared: ${file(../serverless.common.yml):shared}
+  shared: ${file(../../serverless.common.yml):shared}
 
 functions:
   defaultHandler:

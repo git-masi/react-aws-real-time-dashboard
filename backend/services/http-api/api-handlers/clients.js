@@ -1,9 +1,9 @@
 import {
   eventBridge,
   eventBridgeRuleOperations,
-} from '../../utils/eventBridge';
-import { apiResponse } from '../../utils/http';
-import { commonMiddleware } from '../../utils/middleware';
+} from '../../../utils/eventBridge';
+import { apiResponse } from '../../../utils/http';
+import { commonMiddleware } from '../../../utils/middleware';
 
 const { SERVICE_NAME } = process.env;
 
