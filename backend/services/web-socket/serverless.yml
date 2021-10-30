@@ -20,7 +20,7 @@ provider:
   websocketsApiName: rardash-web-socket
   websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
   environment:
-    CONNECTIONS_TABLE_NAME: !Ref RtkqStreamingConnectionsTable
+    CONNECTIONS_TABLE_NAME: ${self:custom.shared.resources.connectionsTableName}
     # The way this is used we need the https endpoint not the wss endpoint
     # figure out a way to manage that in the future
     # WS_API_ENDPOINT: '' # This is used for the initial deploy when rardash-web-socket doesn't exist
@@ -36,8 +36,7 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:UpdateItem
       Resource:
-        - !GetAtt RtkqStreamingConnectionsTable.Arn
-        - !Join ['/', [!GetAtt RtkqStreamingConnectionsTable.Arn, 'index', '*']]
+        - ${self:custom.shared.resources.connectionsTableArn}
     - Effect: Allow
       Action:
         - dynamodb:Query
