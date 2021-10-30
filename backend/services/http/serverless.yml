@@ -1,4 +1,4 @@
-service: rardash-http-api
+service: rardash-http
 
 frameworkVersion: '2'
 

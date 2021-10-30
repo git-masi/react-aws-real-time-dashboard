@@ -1,6 +1,6 @@
 import { DynamoDB } from 'aws-sdk';
 import { updatedDiff } from 'deep-object-diff';
-import { getItems } from '../../http-api/db/shared';
+import { getItems } from '../../http/db/shared';
 import { getConnectionsByStore } from '../db/connections';
 import { isEmpty } from '../utils/data';
 import { sendWebsocketMessage } from '../utils/wsMessage';

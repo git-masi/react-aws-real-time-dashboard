@@ -1,6 +1,6 @@
 import { name, commerce } from 'faker';
 import { randomInt } from 'd3-random';
-import { addOrder } from '../../http-api/db/orders';
+import { addOrder } from '../../http/db/orders';
 
 const TEST_STORE_ID = '98765';
 
