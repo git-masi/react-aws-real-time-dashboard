@@ -31,8 +31,13 @@ resources:
 
     RARDashMain:
       Type: AWS::DynamoDB::Table
+      DeletionPolicy: Delete
+      UpdateReplacePolicy: Delete
       Properties:
         TableName: RARDashMain-${self:provider.stage}
+        TimeToLiveSpecification:
+          AttributeName: expiresAt
+          Enabled: true
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: pk
@@ -49,8 +54,8 @@ resources:
 
     RARDashConnections:
       Type: AWS::DynamoDB::Table
-      # DeletionPolicy: Retain
-      # UpdateReplacePolicy: Retain
+      DeletionPolicy: Delete
+      UpdateReplacePolicy: Delete
       Properties:
         TableName: RARDashConnections-${self:provider.stage}
         BillingMode: PAY_PER_REQUEST
