@@ -1,6 +1,6 @@
-export const handler = storeAuthorizer;
+export const handler = clientAuthorizer;
 
-async function storeAuthorizer(event, context, callback) {
+async function clientAuthorizer(event, context, callback) {
   console.info(event);
   const { authorizationToken, methodArn } = event;
 

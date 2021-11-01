@@ -46,7 +46,7 @@ functions:
           path: /orders
           cors: true
           authorizer:
-            name: storeAuthorizer
+            name: clientAuthorizer
           request:
             schema:
               application/json: ${file(schema/createOrder.json)}
@@ -59,7 +59,7 @@ functions:
             path: /orders
             cors: true
             authorizer:
-              name: storeAuthorizer
+              name: clientAuthorizer
 
   createClient:
     handler: api-handlers/createClient.handler
@@ -69,10 +69,10 @@ functions:
           path: /clients
           cors: true
           # authorizer:
-          #   name: storeAuthorizer
+          #   name: clientAuthorizer
           # request:
           #   schema:
           #     application/json: ${file(schema/createOrder.json)}
 
-  storeAuthorizer:
-    handler: authorizers/storeAuthorizer.handler
+  clientAuthorizer:
+    handler: authorizers/clientAuthorizer.handler
