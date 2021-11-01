@@ -50,7 +50,7 @@ provider:
         - dynamodb:GetShardIterator
         - dynamodb:ListStreams
       Resource:
-        - ${cf:rardash-http-${self:provider.stage}.RtkqStreamingMainTableArn}
+        - ${cf:rardash-http-${self:provider.stage}.RARDashMainTableArn}
 
 custom:
   basename: ${self:service}-${self:provider.stage}
@@ -92,7 +92,7 @@ functions:
           type: dynamodb
           batchSize: 1
           startingPosition: LATEST
-          arn: ${cf:rardash-http-${self:provider.stage}.RtkqStreamingMainTableStreamArn}
+          arn: ${cf:rardash-http-${self:provider.stage}.RARDashMainTableStreamArn}
           enabled: true
 
   # tableCleanup:

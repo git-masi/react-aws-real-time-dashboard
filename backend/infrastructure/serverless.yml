@@ -29,10 +29,10 @@ resources:
     #     RestApiId:
     #       Ref: 'ApiGatewayRestApi'
 
-    RtkqStreamingMain:
+    RARDashMain:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: RtkqStreamingMain-${self:provider.stage}
+        TableName: RARDashMain-${self:provider.stage}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: pk
@@ -47,12 +47,12 @@ resources:
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
 
-    RtkqStreamingConnections:
+    RARDashConnections:
       Type: AWS::DynamoDB::Table
       # DeletionPolicy: Retain
       # UpdateReplacePolicy: Retain
       Properties:
-        TableName: RtkqStreamingConnections-${self:provider.stage}
+        TableName: RARDashConnections-${self:provider.stage}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: pk
@@ -70,27 +70,27 @@ resources:
             KeyType: RANGE
 
   Outputs:
-    RtkqStreamingMainName:
-      Value: !Ref RtkqStreamingMain
+    RARDashMainName:
+      Value: !Ref RARDashMain
       Export:
-        Name: RtkqStreamingMainName
-    RtkqStreamingMainArn:
-      Value: !GetAtt RtkqStreamingMain.Arn
+        Name: RARDashMainName
+    RARDashMainArn:
+      Value: !GetAtt RARDashMain.Arn
       Export:
-        Name: RtkqStreamingMainArn
-    RtkqStreamingMainStreamArn:
-      Value: !GetAtt RtkqStreamingMain.StreamArn
+        Name: RARDashMainArn
+    RARDashMainStreamArn:
+      Value: !GetAtt RARDashMain.StreamArn
       Export:
-        Name: RtkqStreamingMainStreamArn
-    RtkqStreamingMainIndexArns:
-      Value: !Join ['/', [!GetAtt RtkqStreamingMain.Arn, 'index', '*']]
+        Name: RARDashMainStreamArn
+    RARDashMainIndexArns:
+      Value: !Join ['/', [!GetAtt RARDashMain.Arn, 'index', '*']]
       Export:
-        Name: RtkqStreamingMainIndexArns
-    RtkqStreamingConnectionsName:
-      Value: !Ref RtkqStreamingConnections
+        Name: RARDashMainIndexArns
+    RARDashConnectionsName:
+      Value: !Ref RARDashConnections
       Export:
-        Name: RtkqStreamingConnectionsName
-    RtkqStreamingConnectionsArn:
-      Value: !GetAtt RtkqStreamingConnections.Arn
+        Name: RARDashConnectionsName
+    RARDashConnectionsArn:
+      Value: !GetAtt RARDashConnections.Arn
       Export:
-        Name: RtkqStreamingConnectionsArn
+        Name: RARDashConnectionsArn
