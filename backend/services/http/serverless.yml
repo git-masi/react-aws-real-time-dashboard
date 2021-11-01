@@ -38,12 +38,12 @@ custom:
   shared: ${file(../../serverless.common.yml):shared}
 
 functions:
-  orders:
-    handler: api-handlers/orders.handler
+  createOrder:
+    handler: api-handlers/createOrder.handler
     events:
       - http:
           method: POST
-          path: orders
+          path: /orders
           cors: true
           authorizer:
             name: storeAuthorizer
@@ -56,17 +56,17 @@ functions:
       events:
         - http:
             method: GET
-            path: orders
+            path: /orders
             cors: true
             authorizer:
               name: storeAuthorizer
 
-  clients:
-    handler: api-handlers/clients.handler
+  createClient:
+    handler: api-handlers/createClient.handler
     events:
       - http:
           method: POST
-          path: clients
+          path: /clients
           cors: true
           # authorizer:
           #   name: storeAuthorizer
