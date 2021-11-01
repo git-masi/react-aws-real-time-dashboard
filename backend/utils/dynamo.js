@@ -11,6 +11,9 @@ export const dynamoDb = {
   transactUpdate(params, documentClient = defaultDocumentClient) {
     return documentClient.transactUpdate(params).promise();
   },
+  query(params, documentClient = defaultDocumentClient) {
+    return documentClient.query(params).promise();
+  },
 };
 
 // Expected input -> [{ TransactItems: [...] }, { TransactItems: [...] }]
@@ -24,8 +27,8 @@ export function assembleTransactionParams(arr) {
   );
 }
 
-// Expected input -> [[TABLE_NAME, { HASH_KEY_NAME: x, RANGE_KEY_NAME: y }, {ATTRIBUTE: a, ANOTHER_ATTRIBUTE: b}], ...]
-export function createUpdateTransactionParams(data) {
+// Expected input -> [TABLE_NAME, { HASH_KEY_NAME: x, RANGE_KEY_NAME: y }, {ATTRIBUTE: a, ANOTHER_ATTRIBUTE: b}], ...
+export function createUpdateTransactionParams(...data) {
   if (!isDataValid)
     throw new Error('Invalid data passed to createUpdateTransactionParams');
 
@@ -83,8 +86,8 @@ export function createUpdateTransactionParams(data) {
   }
 }
 
-// Expected input -> [[TABLE_NAME, { x: y, ... }], [ANOTHER_TABLE_NAME, { a: b, ... }], ...]
-export function createWriteTransactionParams(data) {
+// Expected input -> [TABLE_NAME, { x: y, ... }], [ANOTHER_TABLE_NAME, { a: b, ... }], ...
+export function createWriteTransactionParams(...data) {
   if (!isDataValid)
     throw new Error('Invalid data passed to createWriteTransactionParams');
 
@@ -108,4 +111,16 @@ export function createWriteTransactionParams(data) {
       )
     );
   }
+}
+
+export function getFirstItem(dbResult) {
+  const { Items, Item } = dbResult;
+  const result = Items?.[0] ?? Item ?? null;
+  return result;
+}
+
+export function getItems(dbResult) {
+  const { Items, Item } = dbResult;
+  const result = Items ?? Item ?? null;
+  return result;
 }

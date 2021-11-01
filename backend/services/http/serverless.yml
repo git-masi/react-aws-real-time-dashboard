@@ -42,12 +42,6 @@ functions:
     handler: api-handlers/orders.handler
     events:
       - http:
-          method: GET
-          path: orders
-          cors: true
-          authorizer:
-            name: storeAuthorizer
-      - http:
           method: POST
           path: orders
           cors: true
@@ -56,6 +50,16 @@ functions:
           request:
             schema:
               application/json: ${file(schema/createOrder.json)}
+
+    readOrders:
+      handler: api-handlers/readOrders.handler
+      events:
+        - http:
+            method: GET
+            path: orders
+            cors: true
+            authorizer:
+              name: storeAuthorizer
 
   clients:
     handler: api-handlers/clients.handler

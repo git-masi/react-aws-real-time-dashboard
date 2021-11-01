@@ -1,33 +1,26 @@
+import { nanoid } from 'nanoid';
 import {
   eventBridge,
   eventBridgeRuleOperations,
 } from '../../../utils/eventBridge';
-import { isEmpty } from '../../../utils/data';
-import {
-  apiResponse,
-  HttpError,
-  httpMethods,
-  methodRouter,
-  pathRouter,
-} from '../../../utils/http';
+import { createWriteTransactionParams } from '../../../utils/dynamo';
+import { pkValues } from './mainTable';
+import { apiResponse, HttpError } from '../../../utils/http';
 import { commonMiddleware } from '../../../utils/middleware';
-import { createClient } from '../db/clients';
 
 const { SERVICE_NAME } = process.env;
 
-export const handler = commonMiddleware(clients);
+export const handler = commonMiddleware(handleCreateClient);
 
-async function clients(event) {
-  const methodRoutes = {
-    [httpMethods.GET]: handleGetMethods,
-    [httpMethods.POST]: handlePostMethods,
-  };
-  const router = methodRouter(methodRoutes);
-
+async function handleCreateClient(event) {
   try {
-    const result = await router(event);
+    const created = new Date().toISOString();
+    const clientId = nanoid(8);
+    const sk = `${created}#${clientId}`;
+    const pk = pkValues.client;
+    const client = { pk, sk, created, clientId };
 
-    if (isEmpty(result)) return apiResponse({ cors: true });
+    const params = createWriteTransactionParams([['table names goes here']]);
 
     return apiResponse({ body: result, cors: true });
   } catch (error) {
@@ -40,22 +33,6 @@ async function clients(event) {
       statusCode: 500,
       cors: true,
     });
-  }
-}
-
-function handlePostMethods(event) {
-  const paths = {
-    '/client': handleCreateClient,
-  };
-  const router = pathRouter(paths);
-
-  return router(event);
-
-  function handleCreateClient(event) {
-    const { body } = event;
-
-    const client = await createClient();
-    // return createOrder({ ...body, storeId: authorizer.principalId });
   }
 }
 
