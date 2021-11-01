@@ -2,28 +2,68 @@ import {
   eventBridge,
   eventBridgeRuleOperations,
 } from '../../../utils/eventBridge';
-import { apiResponse } from '../../../utils/http';
+import { isEmpty } from '../../../utils/data';
+import {
+  apiResponse,
+  HttpError,
+  httpMethods,
+  methodRouter,
+  pathRouter,
+} from '../../../utils/http';
 import { commonMiddleware } from '../../../utils/middleware';
+import { createClient } from '../db/clients';
 
 const { SERVICE_NAME } = process.env;
 
 export const handler = commonMiddleware(clients);
 
 async function clients(event) {
+  const methodRoutes = {
+    [httpMethods.GET]: handleGetMethods,
+    [httpMethods.POST]: handlePostMethods,
+  };
+  const router = methodRouter(methodRoutes);
+
   try {
-    const fakeOrderRule = findFakeOrderRule();
-    console.log(fakeOrderRule);
-    // const params = {
-    //   Name: '', // required
-    //   EventBusName: '',
-    // };
-    // await eventBridge.rule(eventBridgeRuleOperations.enable, params);
-    return apiResponse({ statusCode: 200, cors: true });
+    const result = await router(event);
+
+    if (isEmpty(result)) return apiResponse({ cors: true });
+
+    return apiResponse({ body: result, cors: true });
   } catch (error) {
     console.info(error);
-    return apiResponse({ statusCode: 500, cors: true });
+
+    if (error instanceof HttpError)
+      return apiResponse({ ...error, cors: true });
+
+    return apiResponse({
+      statusCode: 500,
+      cors: true,
+    });
   }
 }
+
+function handlePostMethods(event) {
+  const paths = {
+    '/client': handleCreateClient,
+  };
+  const router = pathRouter(paths);
+
+  return router(event);
+
+  function handleCreateClient(event) {
+    const { body } = event;
+
+    const client = await createClient();
+    // return createOrder({ ...body, storeId: authorizer.principalId });
+  }
+}
+
+// const params = {
+//   Name: '', // required
+//   EventBusName: '',
+// };
+// await eventBridge.rule(eventBridgeRuleOperations.enable, params);
 
 async function findFakeOrderRule() {
   const params = {
