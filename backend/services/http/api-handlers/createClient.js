@@ -7,7 +7,7 @@ import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
 import { pkValues } from '../../../utils/constants';
 import { apiResponse, HttpError } from '../../../utils/http';
 import { commonMiddleware } from '../../../utils/middleware';
-import { createClientJwt } from '../../../utils/jwt';
+import { signClientJwt } from '../../../utils/jwt';
 
 const { MAIN_TABLE_NAME, JOB_SERVICE_NAME } = process.env;
 
@@ -33,7 +33,7 @@ async function handleCreateClient(event) {
       }
     }
 
-    const jwt = await createClientJwt(client);
+    const jwt = await signClientJwt(client);
 
     return apiResponse({ body: { clientToken: jwt }, cors: true });
   } catch (error) {

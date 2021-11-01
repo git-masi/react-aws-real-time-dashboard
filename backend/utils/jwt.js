@@ -1,12 +1,16 @@
-import { SignJWT } from 'jose';
+import { SignJWT, jwtVerify } from 'jose';
 
-export async function createClientJwt(client) {
-  // This is only for testing, in production we'd want to use an SSM parameter or Secrets Manager secret
-  const privateKey = 'test';
+// This is only for testing, in production we'd want to use an SSM parameter or Secrets Manager secret
+const clientKey = 'testing123';
 
+export async function signClientJwt(client) {
   return await new SignJWT(client)
     .setProtectedHeader({ alg: 'ES256' })
     .setIssuedAt()
     .setExpirationTime('12h')
-    .sign(privateKey);
+    .sign(clientKey);
+}
+
+export async function verifyClientJwt(jwt) {
+  return await jwtVerify(jwt, clientKey); // { payload, protectedHeader }
 }
