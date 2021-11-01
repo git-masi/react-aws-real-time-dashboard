@@ -20,6 +20,19 @@ async function handleCreateClient(event) {
 
     await dynamoDb.transactWrite(params);
 
+    const fakeOrderRule = findFakeOrderRule();
+
+    if (fakeOrderRule) {
+      const isDisabled = fakeOrderRule.State === 'DISABLED';
+
+      if (isDisabled) {
+        await eventBridge.rule(eventBridgeRuleOperations.enable, {
+          Name: 'default',
+          EventBusName: fakeOrderRule.Name,
+        });
+      }
+    }
+
     const jwt = await createClientJwt(client);
 
     return apiResponse({ body: { clientToken: jwt }, cors: true });
@@ -44,12 +57,6 @@ async function handleCreateClient(event) {
     return { pk, sk, created, clientId };
   }
 }
-
-// const params = {
-//   Name: '', // required
-//   EventBusName: '',
-// };
-// await eventBridge.rule(eventBridgeRuleOperations.enable, params);
 
 async function findFakeOrderRule() {
   const params = {
