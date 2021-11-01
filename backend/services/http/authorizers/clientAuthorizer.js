@@ -1,3 +1,5 @@
+import { verifyClientJwt } from '../../../utils/jwt';
+
 export const handler = clientAuthorizer;
 
 async function clientAuthorizer(event, context, callback) {
@@ -11,12 +13,14 @@ async function clientAuthorizer(event, context, callback) {
 
     const token = authorizationToken.replace('Bearer ', '').trim();
 
-    // Testing only, use JWT in production
-    if (token !== '98765') {
+    const { payload } = verifyClientJwt(token);
+    const { clientId } = payload;
+
+    if (!clientId) {
       throw new Error('Auth token is invalid');
     }
 
-    return callback(null, createAllowPolicy(token, methodArn));
+    return callback(null, createAllowPolicy(clientId, methodArn));
   } catch (error) {
     console.info(error);
     return callback('Unauthorized');
