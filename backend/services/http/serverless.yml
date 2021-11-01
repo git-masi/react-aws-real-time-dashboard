@@ -17,7 +17,7 @@ provider:
   lambdaHashingVersion: 20201221
   memorySize: 256
   environment:
-    SERVICE_NAME: ${self:service}
+    JOBS_SERVICE_NAME: ${self:custom.stacks.jobs}
     BASE_NAME: ${self:custom.basename}
     MAIN_TABLE_NAME: ${self:custom.shared.resources.mainTableName}
   apiGateway:
@@ -36,6 +36,7 @@ provider:
 custom:
   basename: ${self:service}-${self:provider.stage}
   shared: ${file(../../serverless.common.yml):shared}
+  stacks: ${file(../../serverless.common.yml):stacks}
 
 functions:
   createOrder:

@@ -1,5 +1,6 @@
 stacks:
-  infrastructure: ${cf:rardash-infrastructure-${self:provider.stage}}
+  infrastructure: rardash-infrastructure-${self:provider.stage}
+  jobs: rardash-jobs-${self:provider.stage}
 
 shared:
   deploymentBucket: eric-experiments-k9xjhbjk3r4s

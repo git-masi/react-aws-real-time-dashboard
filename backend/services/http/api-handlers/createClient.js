@@ -3,26 +3,26 @@ import {
   eventBridge,
   eventBridgeRuleOperations,
 } from '../../../utils/eventBridge';
-import { createWriteTransactionParams } from '../../../utils/dynamo';
-import { pkValues } from './mainTable';
+import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
+import { pkValues } from '../../../utils/constants';
 import { apiResponse, HttpError } from '../../../utils/http';
 import { commonMiddleware } from '../../../utils/middleware';
+import { createClientJwt } from '../../../utils/jwt';
 
-const { SERVICE_NAME } = process.env;
+const { MAIN_TABLE_NAME, JOB_SERVICE_NAME } = process.env;
 
 export const handler = commonMiddleware(handleCreateClient);
 
 async function handleCreateClient(event) {
   try {
-    const created = new Date().toISOString();
-    const clientId = nanoid(8);
-    const sk = `${created}#${clientId}`;
-    const pk = pkValues.client;
-    const client = { pk, sk, created, clientId };
+    const client = buildClient();
+    const params = createWriteTransactionParams([MAIN_TABLE_NAME, client]);
 
-    const params = createWriteTransactionParams([['table names goes here']]);
+    await dynamoDb.transactWrite(params);
 
-    return apiResponse({ body: result, cors: true });
+    const jwt = await createClientJwt(client);
+
+    return apiResponse({ body: { clientToken: jwt }, cors: true });
   } catch (error) {
     console.info(error);
 
@@ -33,6 +33,15 @@ async function handleCreateClient(event) {
       statusCode: 500,
       cors: true,
     });
+  }
+
+  function buildClient() {
+    const created = new Date().toISOString();
+    const clientId = nanoid(8);
+    const sk = `${created}#${clientId}`;
+    const pk = pkValues.client;
+
+    return { pk, sk, created, clientId };
   }
 }
 
@@ -45,7 +54,7 @@ async function handleCreateClient(event) {
 async function findFakeOrderRule() {
   const params = {
     EventBusName: 'default',
-    NamePrefix: SERVICE_NAME,
+    NamePrefix: JOB_SERVICE_NAME,
   };
   const rules = await eventBridge.rule(eventBridgeRuleOperations.list, params);
   console.log(rules);
