@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 // Ideally these would be env vars
 const httpApiEndpoint =
@@ -72,20 +73,27 @@ async function handleOrderCacheEntryAdded(
 ) {
   const token = getState().auth.clientToken;
   // create a websocket connection when the cache subscription starts
-  const ws = new WebSocket(`${websocketEndpoint}?authorization=${token}`);
+  const ws = new ReconnectingWebSocket(
+    `${websocketEndpoint}?authorization=${token}`
+  );
+
+  let wsTimeout = null;
+  const keepAliveBody = { action: 'keepAlive' };
 
   // This may be where we try some kind of fallback logic or at least display
   // a toast or something to indicate there was an error with the connection
-  ws.addEventListener('error', () =>
-    console.log('%cYou done messed up A-a-ron!', 'color: tomato')
-  );
+  ws.addEventListener('error', () => {
+    console.log('%cWebSocket error', 'color: tomato');
+  });
 
   ws.addEventListener('open', () => {
     console.log('%cWebSocket open', 'color: cornflowerBlue');
+    keepAlive();
   });
 
   ws.addEventListener('close', () => {
     console.log('%cWebSocket closed', 'color: coral');
+    cancelKeepAlive();
   });
 
   try {
@@ -120,4 +128,19 @@ async function handleOrderCacheEntryAdded(
   await cacheEntryRemoved;
   // perform cleanup steps once the `cacheEntryRemoved` promise resolves
   ws.close?.();
+
+  function keepAlive() {
+    if (wsTimeout && ws.readyState === ws.OPEN) {
+      ws.send(JSON.stringify(keepAliveBody));
+    }
+
+    // WebSocket closes after 10 mins of inactivity, 570000 = 9m 30s
+    wsTimeout = setTimeout(keepAlive, 570000);
+  }
+
+  function cancelKeepAlive() {
+    if (wsTimeout) {
+      clearTimeout(wsTimeout);
+    }
+  }
 }
