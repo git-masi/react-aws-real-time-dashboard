@@ -20,7 +20,7 @@ async function wsConnectAuthorizer(event, context) {
 
     context.succeed(allowPolicy);
 
-    return authorization;
+    return claims;
   } catch (error) {
     console.log(error);
     context.fail('Authorizer verification failed');
