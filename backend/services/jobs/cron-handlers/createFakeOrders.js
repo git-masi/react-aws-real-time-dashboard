@@ -19,6 +19,7 @@ async function createFakeOrders() {
 
     console.info(updateResults); // todo: error handling if an update fails
 
+    // DynamoDb transactions can only write 25 items at a time
     function batchClients(clients, batches = []) {
       if (clients.length <= 25) return [...batches, clients];
 
