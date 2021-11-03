@@ -36,7 +36,7 @@ export const api = createApi({
       // keepUnusedDataFor configuration for an individual endpoint, overriding the api setting (if it exists)
       // when the time expires the component will unsubscribe which will have the side effect or closing the WebSocket
       keepUnusedDataFor: 5,
-      // onCacheEntryAdded: handleOrderCacheEntryAdded,
+      onCacheEntryAdded: handleOrderCacheEntryAdded,
     }),
     createOrder: builder.mutation({
       query: (body) => ({
