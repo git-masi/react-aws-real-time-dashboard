@@ -10,6 +10,7 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
+  region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'}
   deploymentBucket:
     name: ${self:custom.deploymentBucket}
@@ -32,6 +33,11 @@ provider:
       Resource:
         - ${self:custom.resources.mainTableArn}
         - ${self:custom.resources.mainTableIndexArns}
+    - Effect: Allow
+      Action:
+        - events:ListRules
+      Resource:
+        - arn:aws:events:${self:provider.region}:${aws:accountId}:rule/*
 
 custom:
   basename: ${self:service}-${self:provider.stage}
