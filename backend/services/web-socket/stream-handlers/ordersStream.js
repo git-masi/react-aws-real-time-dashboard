@@ -11,7 +11,7 @@ async function ordersStream(event) {
   const { newRecord, oldRecord } = getRecordData(event);
   const diff = updatedDiff(oldRecord, newRecord);
 
-  console.info(`diff for ${oldRecord.pk}|${oldRecord.sk}:`, diff);
+  console.info(`diff for ${newRecord.pk}|${newRecord.sk}:`, diff);
 
   if (
     isNewRecord(newRecord, oldRecord) ||
@@ -20,6 +20,8 @@ async function ordersStream(event) {
     const connections = getItems(
       await getConnectionsByClient(newRecord.clientId)
     );
+
+    if (connections.length === 0) return;
 
     await sendStatusUpdateMessages(connections, newRecord);
   }

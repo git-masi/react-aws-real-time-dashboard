@@ -48,7 +48,7 @@ export async function removeConnection(connectionId) {
 export async function getConnectionsByClient(clientId) {
   const params = {
     TableName: CONNECTIONS_TABLE_NAME,
-    KeyConditionExpression: 'pk = :pk and begins_with(clientId, :clientId)',
+    KeyConditionExpression: 'pk = :pk and begins_with(sk, :clientId)',
     ExpressionAttributeValues: {
       ':pk': pkValues.connection,
       ':clientId': clientId,
