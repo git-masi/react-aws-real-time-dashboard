@@ -35,7 +35,7 @@ export function ClientForm(props) {
         <Stack direction={'column'} sx={{ padding: '1rem 0' }} spacing={2}>
           <Tooltip title="This can be anything" placement="bottom-start">
             <TextField
-              id="outlined-basic"
+              id="username-input"
               label="username"
               variant="outlined"
               required
@@ -45,7 +45,7 @@ export function ClientForm(props) {
 
           <Tooltip title="This can be anything" placement="bottom-start">
             <TextField
-              id="outlined-basic"
+              id="password-input"
               label="password"
               variant="outlined"
               required
