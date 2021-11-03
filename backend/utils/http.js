@@ -1,5 +1,4 @@
 import cloneDeep from 'lodash.clonedeep';
-import { useStartAndEndPattern } from './regex';
 
 export class HttpError extends Error {
   constructor(statusCode = 500, message) {
