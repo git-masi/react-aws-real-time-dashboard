@@ -40,7 +40,7 @@ async function handleCreateClient(event) {
     const clientId = nanoid(8);
     const sk = clientId;
     const pk = pkValues.client;
-    const expiresAt = add(now, { days: 1 });
+    const expiresAt = add(now, { days: 1 }).toISOString();
 
     return { pk, sk, created, clientId, expiresAt };
   }

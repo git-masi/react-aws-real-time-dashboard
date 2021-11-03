@@ -55,7 +55,7 @@ async function createFakeOrders() {
     const items = createItems();
     const now = new Date();
     const created = now.toISOString();
-    const expiresAt = add(now, { days: 1 });
+    const expiresAt = add(now, { days: 1 }).toISOString();
     const sk = `${clientId}#${created}`;
     const order = {
       firstName: name.firstName(),
