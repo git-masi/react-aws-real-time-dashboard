@@ -2,16 +2,20 @@ import { EventBridge } from 'aws-sdk';
 
 const eb = new EventBridge();
 
-export const eventBridgeRuleOperations = Object.freeze({
-  add: 'putRule',
-  remove: 'deleteRule',
-  enable: 'enableRule',
-  disable: 'disableRule',
-  list: 'listRules',
-});
-
 export const eventBridge = {
-  rule(operation, params) {
-    return eb[operation]?.(params).promise();
+  putRule(params) {
+    return eb.putRule(params).promise();
+  },
+  deleteRule(params) {
+    return eb.deleteRule(params).promise();
+  },
+  enableRule(params) {
+    return eb.enableRule(params).promise();
+  },
+  disableRule(params) {
+    return eb.disableRule(params).promise();
+  },
+  listRules(params) {
+    return eb.listRules(params).promise();
   },
 };
