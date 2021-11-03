@@ -70,11 +70,11 @@ functions:
       - websocket:
           route: $disconnect
 
-  # KeepConnectionAlive:
-  #   handler: web-socket-handlers/keepConnectionAlive.handler
-  #   events:
-  #     - websocket:
-  #         route: keepAlive
+  keepAlive:
+    handler: web-socket-handlers/keepAlive.handler
+    events:
+      - websocket:
+          route: keepAlive
 
   # ordersStream:
   #   handler: stream-handlers/ordersStream.handler

@@ -108,6 +108,9 @@ async function handleOrderCacheEntryAdded(
 
       console.log('data', data);
 
+      // Do not update cached data if we get a keep alive message
+      if (data?.action === keepAliveBody.action) return;
+
       updateCachedData((draft) => {
         const orderIndex = draft.findIndex((order) => order.sk === data.sk);
 
