@@ -14,3 +14,10 @@ export const signClientJwt = async (client) =>
 
 export const verifyClientJwt = async (jwt) =>
   await jwtVerify(jwt, createSecretKey(Buffer.from(APP_SECRET, 'utf8'))); // { payload, protectedHeader }
+
+export const isTokenExpired = (claims) => {
+  const { exp } = claims;
+  const timestamp = +(exp + '000'); // Convert exp to milliseconds
+
+  return Date.now() > timestamp;
+};

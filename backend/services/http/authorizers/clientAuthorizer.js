@@ -1,4 +1,4 @@
-import { verifyClientJwt } from '../../../utils/jwt';
+import { isTokenExpired, verifyClientJwt } from '../../../utils/jwt';
 
 export const handler = clientAuthorizer;
 
@@ -13,10 +13,10 @@ async function clientAuthorizer(event, context, callback) {
 
     const token = authorizationToken.replace('Bearer ', '').trim();
 
-    const { payload } = verifyClientJwt(token);
-    const { clientId } = payload;
+    const { payload: claims } = await verifyClientJwt(token);
+    const { clientId } = claims;
 
-    if (!clientId) {
+    if (!clientId || isTokenExpired(claims)) {
       throw new Error('Auth token is invalid');
     }
 
