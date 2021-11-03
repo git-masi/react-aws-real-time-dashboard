@@ -12,16 +12,9 @@ async function createFakeOrders() {
   try {
     const clients = await readAllClients();
     const batches = batchClients(clients);
-    const updates = batches.map((batch) => {
-      const orders = batch.map((client) => [
-        MAIN_TABLE_NAME,
-        buildNewOrder(client.clientId),
-      ]);
-
-      return createWriteTransactionParams(...orders);
-    });
+    const batchedParams = batches.map(buildDbTransactionParams);
     const updateResults = await Promise.allSettled(
-      updates.map((update) => dynamoDb.transactWrite(update))
+      batchedParams.map((params) => dynamoDb.transactWrite(params))
     );
 
     console.info(updateResults); // todo: error handling if an update fails
@@ -32,6 +25,15 @@ async function createFakeOrders() {
       const batch = clients.slice(0, 25);
 
       return batchClients(clients.slice(25), [...batches, batch]);
+    }
+
+    function buildDbTransactionParams(batch) {
+      const orders = batch.map((client) => [
+        MAIN_TABLE_NAME,
+        buildNewOrder(client.clientId),
+      ]);
+
+      return createWriteTransactionParams(...orders);
     }
   } catch (error) {
     console.info(error);
