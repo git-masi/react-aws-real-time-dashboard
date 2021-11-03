@@ -4,6 +4,10 @@ import { isEmpty } from './data';
 
 const { MAIN_TABLE_NAME } = process.env;
 
+// This function will return ALL clients
+// There is no limit so your lambda could timeout
+// or you could run up a huge bill
+// Be careful!
 export async function readAllClients(items = [], ExclusiveStartKey = {}) {
   const params = {
     TableName: MAIN_TABLE_NAME,
