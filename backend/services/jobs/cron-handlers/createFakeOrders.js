@@ -3,6 +3,7 @@ import { randomInt } from 'd3-random';
 import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
 import { orderStatuses, pkValues } from '../../../utils/constants';
 import { readAllClients } from '../../../utils/clients';
+import { add } from 'date-fns';
 
 const { MAIN_TABLE_NAME } = process.env;
 
@@ -42,7 +43,9 @@ async function createFakeOrders() {
 
   function buildNewOrder(clientId) {
     const items = createItems();
-    const created = new Date().toISOString();
+    const now = new Date();
+    const created = now.toISOString();
+    const expiresAt = add(now, { days: 1 });
     const sk = `${clientId}#${created}`;
     const order = {
       firstName: name.firstName(),
@@ -54,6 +57,7 @@ async function createFakeOrders() {
       sk,
       created,
       status: orderStatuses.open,
+      expiresAt,
     };
 
     return order;
