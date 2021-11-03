@@ -14,7 +14,7 @@ import AllOrders from './features/orders/AllOrders';
 import UpdateOrderStatuses from './features/orders/UpdateOrderStatuses';
 import { titleCase } from './utils/strings';
 import { selectClientToken } from './app/authSlice';
-import { borderRadius } from '@material-ui/system';
+import { ClientForm } from './features/login/ClientForm';
 
 const views = Object.freeze({
   none: 'none',
@@ -64,52 +64,6 @@ function Nav(props) {
     <Stack direction={'row'} sx={{ padding: '1rem 0' }} spacing={2}>
       {buttons}
     </Stack>
-  );
-}
-
-function ClientForm() {
-  const login = (e) => {
-    e.preventDefault();
-    console.log('login');
-  };
-
-  return (
-    <Container
-      maxWidth="sm"
-      style={{
-        marginTop: '1rem',
-        border: '1px solid #42a5f5',
-        borderRadius: '3px',
-      }}
-    >
-      <form onSubmit={login}>
-        <Stack direction={'column'} sx={{ padding: '1rem 0' }} spacing={2}>
-          <Tooltip title="This can be anything" placement="bottom-start">
-            <TextField
-              id="outlined-basic"
-              label="username"
-              variant="outlined"
-              required
-              size="small"
-            />
-          </Tooltip>
-
-          <Tooltip title="This can be anything" placement="bottom-start">
-            <TextField
-              id="outlined-basic"
-              label="password"
-              variant="outlined"
-              required
-              size="small"
-            />
-          </Tooltip>
-
-          <Button type="submit" variant="outlined">
-            Login
-          </Button>
-        </Stack>
-      </form>
-    </Container>
   );
 }
 

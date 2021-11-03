@@ -12,8 +12,7 @@ export const api = createApi({
     baseUrl: httpApiEndpoint,
     prepareHeaders: (headers, { getState }) => {
       // By default, if we have a token in the store, let's use that for authenticated requests
-      // const token = (getState()).auth.token
-      const token = '98765';
+      const token = getState().auth.clientToken;
 
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
@@ -23,6 +22,14 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
+    createClient: builder.mutation({
+      query() {
+        return {
+          url: 'clients',
+          method: 'POST',
+        };
+      },
+    }),
     getOrders: builder.query({
       query: () => {
         console.log('%cfetching orders', 'color: darkSeaGreen');
@@ -54,6 +61,7 @@ export const {
   useGetOrdersQuery,
   useCreateOrderMutation,
   useUpdateOrderMutation,
+  useCreateClientMutation,
 } = api;
 
 async function handleOrderCacheEntryAdded(
