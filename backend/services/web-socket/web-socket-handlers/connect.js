@@ -1,4 +1,4 @@
-import { addConnection } from '../db/connections';
+import { addConnection } from '../../../utils/connections';
 import { WsResponse } from '../utils/wsMessage';
 
 export const handler = connect;
