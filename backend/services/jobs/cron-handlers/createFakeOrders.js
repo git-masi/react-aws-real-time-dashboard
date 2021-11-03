@@ -14,7 +14,7 @@ async function createFakeOrders() {
   try {
     const clients = await readAllClients();
 
-    if (!clients.length === 0) {
+    if (clients.length === 0) {
       console.info(
         'No clients available, stopping the job to prevent further lambda invocations'
       );
