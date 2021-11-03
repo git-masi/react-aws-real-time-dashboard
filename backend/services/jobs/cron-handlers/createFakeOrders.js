@@ -43,7 +43,7 @@ async function createFakeOrders() {
   function buildNewOrder(clientId) {
     const items = createItems();
     const created = new Date().toISOString();
-    const sk = `${created}#${clientId}`;
+    const sk = `${clientId}#${created}`;
     const order = {
       firstName: name.firstName(),
       lastName: name.lastName(),

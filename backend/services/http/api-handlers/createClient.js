@@ -48,7 +48,7 @@ async function handleCreateClient(event) {
   function buildClient() {
     const created = new Date().toISOString();
     const clientId = nanoid(8);
-    const sk = `${created}#${clientId}`;
+    const sk = clientId;
     const pk = pkValues.client;
 
     return { pk, sk, created, clientId };
