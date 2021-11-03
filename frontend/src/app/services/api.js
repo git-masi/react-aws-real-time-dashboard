@@ -68,10 +68,11 @@ async function handleOrderCacheEntryAdded(
   // The channel is passed as an argument to the query like so:
   //    query: (channel) => `path/${channel}`
   arg,
-  { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+  { updateCachedData, cacheDataLoaded, cacheEntryRemoved, getState }
 ) {
+  const token = getState().auth.clientToken;
   // create a websocket connection when the cache subscription starts
-  const ws = new WebSocket(`${websocketEndpoint}?authorization=98765`);
+  const ws = new WebSocket(`${websocketEndpoint}?authorization=${token}`);
 
   // This may be where we try some kind of fallback logic or at least display
   // a toast or something to indicate there was an error with the connection
