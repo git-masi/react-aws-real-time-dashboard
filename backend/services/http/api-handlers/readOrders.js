@@ -1,6 +1,7 @@
 import { commonMiddleware } from '../../../utils/middleware';
 import { apiResponse, HttpError } from '../../../utils/http';
-import { dynamoDb } from '../../../utils/dynamo';
+import { dynamoDb, getItems } from '../../../utils/dynamo';
+import { pkValues } from '../../../utils/constants';
 
 const { MAIN_TABLE_NAME } = process.env;
 

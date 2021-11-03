@@ -60,15 +60,15 @@ functions:
             schema:
               application/json: ${file(schema/createOrder.json)}
 
-    readOrders:
-      handler: api-handlers/readOrders.handler
-      events:
-        - http:
-            method: GET
-            path: /orders
-            cors: true
-            authorizer:
-              name: clientAuthorizer
+  readOrders:
+    handler: api-handlers/readOrders.handler
+    events:
+      - http:
+          method: GET
+          path: /orders
+          cors: true
+          authorizer:
+            name: clientAuthorizer
 
   createClient:
     handler: api-handlers/createClient.handler

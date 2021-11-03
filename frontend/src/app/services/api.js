@@ -23,12 +23,10 @@ export const api = createApi({
   }),
   endpoints: (builder) => ({
     createClient: builder.mutation({
-      query() {
-        return {
-          url: 'clients',
-          method: 'POST',
-        };
-      },
+      query: () => ({
+        url: 'clients',
+        method: 'POST',
+      }),
     }),
     getOrders: builder.query({
       query: () => {
