@@ -14,7 +14,7 @@ async function handleReadOrders(event) {
   } = requestContext;
 
   try {
-    const dbResults = await getOrders(
+    const dbResults = await readOrders(
       clientId,
       parseQueryParams(queryStringParameters)
     );
@@ -58,7 +58,7 @@ function parseQueryParams(queryStringParameters) {
   }, {});
 }
 
-function getOrders(clientId, config = {}) {
+function readOrders(clientId, config = {}) {
   const { asc = true, limit, startSk } = config;
   const dbQuery = {
     TableName: MAIN_TABLE_NAME,
