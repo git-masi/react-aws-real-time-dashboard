@@ -10,7 +10,8 @@ import {
 import { useCreateClientMutation } from '../../app/services/api';
 import { updateAuth } from '../../app/authSlice';
 
-export function ClientForm() {
+export function ClientForm(props) {
+  const { onLogin } = props;
   const [trigger] = useCreateClientMutation();
   const dispatch = useDispatch();
 
@@ -18,6 +19,7 @@ export function ClientForm() {
     e.preventDefault();
     const auth = await trigger().unwrap();
     dispatch(updateAuth(auth));
+    onLogin();
   };
 
   return (

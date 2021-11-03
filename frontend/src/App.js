@@ -24,7 +24,6 @@ const views = Object.freeze({
 
 export default function App() {
   const [display, setDisplay] = useState(views.none);
-
   const previousView = useRef(null);
 
   const setView = (newView) =>
@@ -33,11 +32,15 @@ export default function App() {
       return newView;
     });
 
+  const handleLoginSuccess = () => {
+    setView(views.allOrders);
+  };
+
   return (
     <Container maxWidth="md">
       <Nav setView={setView} />
 
-      {display === views.none && <ClientForm />}
+      {display === views.none && <ClientForm onLogin={handleLoginSuccess} />}
 
       {display === views.allOrders && <AllOrders />}
 
