@@ -1,4 +1,4 @@
-import { removeConnection } from '../db/connections';
+import { removeConnection } from '../../../utils/connections';
 
 export const handler = disconnect;
 
