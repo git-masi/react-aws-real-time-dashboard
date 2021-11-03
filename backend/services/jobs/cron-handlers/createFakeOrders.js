@@ -2,6 +2,7 @@ import { name, commerce } from 'faker';
 import { randomInt } from 'd3-random';
 import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
 import { orderStatuses, pkValues } from '../../../utils/constants';
+import { readAllClients } from '../../../utils/clients';
 
 const { MAIN_TABLE_NAME } = process.env;
 
@@ -9,12 +10,29 @@ export const handler = createFakeOrders;
 
 async function createFakeOrders() {
   try {
-    const params = createWriteTransactionParams([
-      MAIN_TABLE_NAME,
-      buildNewOrder('SOME_CLIENT_ID_HERE'), // todo: get all clients and add an order per client
-    ]);
+    const clients = await readAllClients();
+    const batches = batchClients(clients);
+    const updates = batches.map((batch) => {
+      const orders = batch.map((client) => [
+        MAIN_TABLE_NAME,
+        buildNewOrder(client.clientId),
+      ]);
 
-    await dynamoDb.transactWrite(params);
+      return createWriteTransactionParams(...orders);
+    });
+    const updateResults = await Promise.allSettled(
+      updates.map((update) => dynamoDb.transactWrite(update))
+    );
+
+    console.info(updateResults); // todo: error handling if an update fails
+
+    function batchClients(clients, batches = []) {
+      if (clients.length <= 25) return [...batches, clients];
+
+      const batch = clients.slice(0, 25);
+
+      return batchClients(clients.slice(25), [...batches, batch]);
+    }
   } catch (error) {
     console.info(error);
   }
