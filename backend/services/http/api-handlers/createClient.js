@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { add } from 'date-fns';
 import { eventBridge } from '../../../utils/eventBridge';
 import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
 import { pkValues } from '../../../utils/constants';
@@ -46,12 +47,14 @@ async function handleCreateClient(event) {
   }
 
   function buildClient() {
-    const created = new Date().toISOString();
+    const now = new Date();
+    const created = now.toISOString();
     const clientId = nanoid(8);
     const sk = clientId;
     const pk = pkValues.client;
+    const expiresAt = add(now, { days: 1 });
 
-    return { pk, sk, created, clientId };
+    return { pk, sk, created, clientId, expiresAt };
   }
 }
 
