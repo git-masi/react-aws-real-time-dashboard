@@ -1,13 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 import { useStartAndEndPattern } from './regex';
 
-export const httpMethods = Object.freeze({
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
-});
-
 export class HttpError extends Error {
   constructor(statusCode = 500, message) {
     super();
@@ -199,47 +192,4 @@ function validateApiResponseConfig(config) {
       typeof event?.headers?.origin !== 'string')
   )
     throw new Error('event config must be api gateway event');
-}
-
-export function methodRouter(routeHandlers) {
-  return function (event) {
-    const { httpMethod } = event;
-
-    if (routeHandlers[httpMethod] instanceof Function) {
-      return routeHandlers[httpMethod](event);
-    }
-
-    throw HttpError.BadRequest();
-  };
-}
-
-// todo: it would be good if pathHandlers could be a Map
-//       that way we could use a regex as a key and simplify
-//       the regex testing against paths
-export function pathRouter(pathHandlers) {
-  return function (event) {
-    const path = getPath();
-
-    if (pathHandlers[path] instanceof Function) {
-      return pathHandlers[path](event);
-    }
-
-    const regexMap = Object.keys(pathHandlers).map((key) => [
-      key,
-      new RegExp(useStartAndEndPattern(key)),
-    ]);
-
-    const match = regexMap.find(([key, regex]) => regex.test(path));
-
-    if (match instanceof Array && pathHandlers[match[0]] instanceof Function) {
-      return pathHandlers[match[0]](event);
-    }
-
-    throw HttpError.BadRequest();
-
-    function getPath() {
-      const { path } = event;
-      return path?.split('?')?.[0];
-    }
-  };
 }
