@@ -8,10 +8,16 @@ const { MAIN_TABLE_NAME } = process.env;
 export const handler = commonMiddleware(handleReadOrders);
 
 async function handleReadOrders(event) {
-  const { queryStringParameters } = event;
+  const { queryStringParameters, requestContext } = event;
+  const {
+    authorizer: { principalId: clientId },
+  } = requestContext;
 
   try {
-    const dbResults = await getOrders(parseQueryParams(queryStringParameters));
+    const dbResults = await getOrders(
+      clientId,
+      parseQueryParams(queryStringParameters)
+    );
     const items = getItems(dbResults);
 
     return apiResponse({ body: items, cors: true });
@@ -52,13 +58,14 @@ function parseQueryParams(queryStringParameters) {
   }, {});
 }
 
-function getOrders(config = {}) {
+function getOrders(clientId, config = {}) {
   const { asc = true, limit, startSk } = config;
   const dbQuery = {
     TableName: MAIN_TABLE_NAME,
-    KeyConditionExpression: 'pk = :pk',
+    KeyConditionExpression: 'pk = :pk and begins_with(sk, :sk)',
     ExpressionAttributeValues: {
       ':pk': pkValues.order,
+      ':sk': clientId,
     },
     ScanIndexForward: asc,
   };
