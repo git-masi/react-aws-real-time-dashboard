@@ -1,8 +1,5 @@
 import { nanoid } from 'nanoid';
-import {
-  eventBridge,
-  eventBridgeRuleOperations,
-} from '../../../utils/eventBridge';
+import { eventBridge } from '../../../utils/eventBridge';
 import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
 import { pkValues } from '../../../utils/constants';
 import { apiResponse, HttpError } from '../../../utils/http';
@@ -26,7 +23,7 @@ async function handleCreateClient(event) {
       const isDisabled = fakeOrderRule.State === 'DISABLED';
 
       if (isDisabled) {
-        await eventBridge.rule(eventBridgeRuleOperations.enable, {
+        await eventBridge.enableRule({
           Name: fakeOrderRule.Name,
           EventBusName: 'default',
         });
@@ -63,8 +60,8 @@ async function findFakeOrderRule() {
     EventBusName: 'default',
     NamePrefix: JOB_SERVICE_NAME,
   };
-  const rules = await eventBridge.rule(eventBridgeRuleOperations.list, params);
-  console.log(rules);
+  const { Rules: rules } = await eventBridge.listRules(params);
+
   return rules.find((rule) => /CreateFakeOrders/i.test(rule?.Name));
 }
 
