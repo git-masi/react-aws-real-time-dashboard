@@ -115,7 +115,7 @@ async function handleOrderCacheEntryAdded(
         const orderIndex = draft.findIndex((order) => order.sk === data.sk);
 
         if (orderIndex === -1) {
-          draft.push(data);
+          draft.unshift(data);
         } else {
           draft[orderIndex] = data;
         }
