@@ -76,5 +76,12 @@ functions:
           #   schema:
           #     application/json: ${file(schema/createOrder.json)}
 
+  test:
+    handler: api-handlers/test.handler
+    events:
+      - http:
+          method: POST
+          path: /test
+
   clientAuthorizer:
     handler: authorizers/clientAuthorizer.handler
