@@ -71,8 +71,8 @@ async function findFakeOrderRule() {
 // {
 //   "Rules": [
 //       {
-//           "Name": "rardash-http-d-FakeOrdersEventsRuleSche-AL4WR31R991Y",
-//           "Arn": "arn:aws:events:us-east-1:967597777336:rule/rardash-http-d-FakeOrdersEventsRuleSche-AL4WR31R991Y",
+//           "Name": "rardash-jobs-dev-CreateFakeOrdersEventsRuleSchedul-17QK9YWVGV6XU",
+//           "Arn": "arn:aws:events:us-east-1:967597777336:rule/rardash-jobs-dev-CreateFakeOrdersEventsRuleSchedul-17QK9YWVGV6XU",
 //           "State": "DISABLED",
 //           "ScheduleExpression": "rate(1 minute)",
 //           "EventBusName": "default"
