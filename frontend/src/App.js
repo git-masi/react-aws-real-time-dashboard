@@ -19,26 +19,8 @@ const views = Object.freeze({
 
 export default function App() {
   const [display, setDisplay] = useState(views.none);
-  const [showActiveDialog, setShowActiveDialog] = useState(false);
+
   const previousView = useRef(null);
-
-  const toggleActiveDialog = () => setShowActiveDialog((prev) => !prev);
-
-  const { isIdle, pause, resume } = useIdleTimer({
-    timeout: 1000 * 60 * 15,
-    onIdle: () => {
-      console.log('the user is idle');
-      setView(views.none);
-      toggleActiveDialog();
-    },
-    onActive: () => {
-      console.log('the user is active');
-    },
-    onAction: () => {
-      console.log('the user took some action');
-    },
-    debounce: 500,
-  });
 
   const setView = (newView) =>
     setDisplay((prev) => {
@@ -46,49 +28,15 @@ export default function App() {
       return newView;
     });
 
-  const showPreviousView = () => {
-    const { current } = previousView;
-    toggleActiveDialog();
-    setDisplay(current ? current : views.none);
-  };
-
-  const setToActive = () => {
-    showPreviousView();
-    resume();
-  };
-
-  useEffect(() => {
-    if (isIdle()) pause();
-  });
-
-  useEffect(() => {
-    function handleVisibilityChange() {
-      console.log('visibility state:', document.visibilityState);
-    }
-
-    window.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, []);
-
   return (
     <Container maxWidth="md">
       <Nav setView={setView} />
 
-      {display === views.none && <h1>Nothing to see here</h1>}
+      {display === views.none && <ClientForm />}
 
       {display === views.allOrders && <AllOrders />}
 
       {display === views.updateStatuses && <UpdateOrderStatuses />}
-
-      {showActiveDialog && (
-        <Dialog open={showActiveDialog}>
-          <DialogTitle>Set Yourself To Active?</DialogTitle>
-          <Button onClick={setToActive}>Yes</Button>
-        </Dialog>
-      )}
     </Container>
   );
 }
@@ -107,3 +55,71 @@ function Nav(props) {
     </Stack>
   );
 }
+
+function ClientForm() {
+  return (
+    <form>
+      <label>
+        username
+        <input type="text" />
+      </label>
+
+      <label>
+        password
+        <input type="text" />
+      </label>
+    </form>
+  );
+}
+
+// function IdleTimer() {
+// const [showActiveDialog, setShowActiveDialog] = useState(false);
+// const showPreviousView = () => {
+//   const { current } = previousView;
+//   toggleActiveDialog();
+//   setDisplay(current ? current : views.none);
+// };
+//   const { isIdle, pause, resume } = useIdleTimer({
+//     timeout: 1000 * 60 * 15,
+//     onIdle: () => {
+//       console.log('the user is idle');
+//       setView(views.none);
+//       toggleActiveDialog();
+//     },
+//     onActive: () => {
+//       console.log('the user is active');
+//     },
+//     onAction: () => {
+//       console.log('the user took some action');
+//     },
+//     debounce: 500,
+//   });
+
+//   const setToActive = () => {
+//     showPreviousView();
+//     resume();
+//   };
+
+//   useEffect(() => {
+//     if (isIdle()) pause();
+//   });
+
+//   useEffect(() => {
+//     function handleVisibilityChange() {
+//       console.log('visibility state:', document.visibilityState);
+//     }
+
+//     window.addEventListener('visibilitychange', handleVisibilityChange);
+
+//     return () => {
+//       window.removeEventListener('visibilitychange', handleVisibilityChange);
+//     };
+//   }, []);
+
+//   return (
+//     <Dialog open={showActiveDialog}>
+//       <DialogTitle>Set Yourself To Active?</DialogTitle>
+//       <Button onClick={setToActive}>Yes</Button>
+//     </Dialog>
+//   );
+// }

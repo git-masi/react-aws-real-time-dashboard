@@ -2,8 +2,9 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // Ideally these would be env vars
 const httpApiEndpoint =
-  'https://ieqkhjhlef.execute-api.us-east-1.amazonaws.com/dev';
-const websocketEndpoint = '';
+  'https://ejpsw7jlve.execute-api.us-east-1.amazonaws.com/dev';
+const websocketEndpoint =
+  'wss://6oebv9lcyk.execute-api.us-east-1.amazonaws.com/dev';
 
 export const api = createApi({
   reducerPath: 'api',
