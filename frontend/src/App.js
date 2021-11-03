@@ -9,7 +9,7 @@ import { titleCase } from './utils/strings';
 
 // Components
 import AllOrders from './features/orders/AllOrders';
-import UpdateOrderStatuses from './features/orders/UpdateOrderStatuses';
+// import UpdateOrderStatuses from './features/orders/UpdateOrderStatuses';
 import { Button, Container, Stack } from '@material-ui/core';
 import { ClientForm } from './features/login/ClientForm';
 
@@ -41,7 +41,7 @@ export default function App() {
 
       {display === views.allOrders && <AllOrders />}
 
-      {display === views.updateStatuses && <UpdateOrderStatuses />}
+      {/* {display === views.updateStatuses && <UpdateOrderStatuses />} */}
     </Container>
   );
 }
