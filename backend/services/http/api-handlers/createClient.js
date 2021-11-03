@@ -1,13 +1,13 @@
 import { nanoid } from 'nanoid';
 import { add } from 'date-fns';
-import { eventBridge } from '../../../utils/eventBridge';
+import { enableCreateFakeOrdersRule } from '../../../utils/orders';
 import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
 import { pkValues } from '../../../utils/constants';
 import { apiResponse, HttpError } from '../../../utils/http';
 import { commonMiddleware } from '../../../utils/middleware';
 import { signClientJwt } from '../../../utils/jwt';
 
-const { MAIN_TABLE_NAME, JOB_SERVICE_NAME } = process.env;
+const { MAIN_TABLE_NAME } = process.env;
 
 export const handler = commonMiddleware(handleCreateClient);
 
@@ -15,23 +15,11 @@ async function handleCreateClient(event) {
   try {
     const client = buildClient();
     const params = createWriteTransactionParams([MAIN_TABLE_NAME, client]);
+    const jwt = await signClientJwt(client);
 
     await dynamoDb.transactWrite(params);
 
-    const fakeOrderRule = await findFakeOrderRule();
-
-    if (fakeOrderRule) {
-      const isDisabled = fakeOrderRule.State === 'DISABLED';
-
-      if (isDisabled) {
-        await eventBridge.enableRule({
-          Name: fakeOrderRule.Name,
-          EventBusName: 'default',
-        });
-      }
-    }
-
-    const jwt = await signClientJwt(client);
+    await enableCreateFakeOrdersRule();
 
     return apiResponse({ body: { clientToken: jwt }, cors: true });
   } catch (error) {
@@ -57,25 +45,3 @@ async function handleCreateClient(event) {
     return { pk, sk, created, clientId, expiresAt };
   }
 }
-
-async function findFakeOrderRule() {
-  const params = {
-    EventBusName: 'default',
-    NamePrefix: JOB_SERVICE_NAME,
-  };
-  const { Rules: rules } = await eventBridge.listRules(params);
-
-  return rules.find((rule) => /CreateFakeOrders/i.test(rule?.Name));
-}
-
-// {
-//   "Rules": [
-//       {
-//           "Name": "rardash-jobs-dev-CreateFakeOrdersEventsRuleSchedul-17QK9YWVGV6XU",
-//           "Arn": "arn:aws:events:us-east-1:967597777336:rule/rardash-jobs-dev-CreateFakeOrdersEventsRuleSchedul-17QK9YWVGV6XU",
-//           "State": "DISABLED",
-//           "ScheduleExpression": "rate(1 minute)",
-//           "EventBusName": "default"
-//       }
-//   ]
-// }
