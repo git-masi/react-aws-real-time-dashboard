@@ -1,8 +1,8 @@
 import { DynamoDB } from 'aws-sdk';
 import { updatedDiff } from 'deep-object-diff';
-import { getItems } from '../../http/db/shared';
-import { getConnectionsByStore } from '../../../utils/connections';
-import { isEmpty } from '../utils/data';
+import { getItems } from '../../../utils/dynamo';
+import { getConnectionsByClient } from '../../../utils/connections';
+import { isEmpty } from '../../../utils/data';
 import { sendWebsocketMessage } from '../utils/wsMessage';
 
 export const handler = ordersStream;
@@ -13,9 +13,12 @@ async function ordersStream(event) {
 
   console.info(`diff for ${oldRecord.pk}|${oldRecord.sk}:`, diff);
 
-  if (didStatusChange(newRecord, oldRecord)) {
+  if (
+    isNewRecord(newRecord, oldRecord) ||
+    didStatusChange(newRecord, oldRecord)
+  ) {
     const connections = getItems(
-      await getConnectionsByStore(newRecord.storeId)
+      await getConnectionsByClient(newRecord.clientId)
     );
 
     await sendStatusUpdateMessages(connections, newRecord);
@@ -53,6 +56,10 @@ function getRecordData(event) {
   const oldRecord = converter.unmarshall(OldImage);
 
   return { newRecord, oldRecord };
+}
+
+function isNewRecord(newRecord, oldRecord) {
+  return isEmpty(oldRecord) && !isEmpty(newRecord);
 }
 
 function didStatusChange(newRecord, oldRecord) {

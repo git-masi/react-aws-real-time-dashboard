@@ -76,15 +76,15 @@ functions:
       - websocket:
           route: keepAlive
 
-  # ordersStream:
-  #   handler: stream-handlers/ordersStream.handler
-  #   events:
-  #     - stream:
-  #         type: dynamodb
-  #         batchSize: 1
-  #         startingPosition: LATEST
-  #         arn: ${self:custom.resources.mainTableStreamArn}
-  #         enabled: true
+  ordersStream:
+    handler: stream-handlers/ordersStream.handler
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 1
+          startingPosition: LATEST
+          arn: ${self:custom.resources.mainTableStreamArn}
+          enabled: true
 
   # tableCleanup:
   #   handler: web-socket-handlers/tableCleanup.handler
