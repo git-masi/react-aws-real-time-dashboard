@@ -2,12 +2,12 @@ stacks:
   infrastructure: rardash-infrastructure-${self:provider.stage}
   jobs: rardash-jobs-${self:provider.stage}
 
-shared:
-  deploymentBucket: eric-experiments-k9xjhbjk3r4s
-  resources:
-    mainTableName: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainName}
-    mainTableArn: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainArn}
-    mainTableStreamArn: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainStreamArn}
-    mainTableIndexArns: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainIndexArns}
-    connectionsTableName: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashConnectionsName}
-    connectionsTableArn: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashConnectionsArn}
+deploymentBucket: eric-experiments-k9xjhbjk3r4s
+
+resources:
+  mainTableName: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainName}
+  mainTableArn: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainArn}
+  mainTableStreamArn: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainStreamArn}
+  mainTableIndexArns: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashMainIndexArns}
+  connectionsTableName: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashConnectionsName}
+  connectionsTableArn: ${cf:rardash-infrastructure-${self:provider.stage}.RARDashConnectionsArn}

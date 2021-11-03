@@ -12,14 +12,14 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   deploymentBucket:
-    name: ${self:custom.shared.deploymentBucket}
+    name: ${self:custom.deploymentBucket}
   deploymentPrefix: ${self:custom.basename}
   lambdaHashingVersion: 20201221
   memorySize: 256
   environment:
     JOBS_SERVICE_NAME: ${self:custom.stacks.jobs}
     BASE_NAME: ${self:custom.basename}
-    MAIN_TABLE_NAME: ${self:custom.shared.resources.mainTableName}
+    MAIN_TABLE_NAME: ${self:custom.resources.mainTableName}
   apiGateway:
     shouldStartNameWithService: true
   iamRoleStatements:
@@ -30,12 +30,13 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - ${self:custom.shared.resources.mainTableArn}
-        - ${self:custom.shared.resources.mainTableIndexArns}
+        - ${self:custom.resources.mainTableArn}
+        - ${self:custom.resources.mainTableIndexArns}
 
 custom:
   basename: ${self:service}-${self:provider.stage}
-  shared: ${file(../../serverless.common.yml):shared}
+  deploymentBucket: ${file(../../serverless.common.yml):deploymentBucket}
+  resources: ${file(../../serverless.common.yml):resources}
   stacks: ${file(../../serverless.common.yml):stacks}
 
 functions:

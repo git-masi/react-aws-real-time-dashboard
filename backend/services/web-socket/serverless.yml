@@ -12,7 +12,7 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   deploymentBucket:
-    name: ${self:custom.shared.deploymentBucket}
+    name: ${self:custom.deploymentBucket}
   deploymentPrefix: ${self:custom.basename}
   lambdaHashingVersion: 20201221
   apiGateway:
@@ -20,7 +20,7 @@ provider:
   websocketsApiName: rardash-web-socket
   websocketsApiRouteSelectionExpression: $request.body.action # custom routes are selected by the value of the action property in the body
   environment:
-    CONNECTIONS_TABLE_NAME: ${self:custom.shared.resources.connectionsTableName}
+    CONNECTIONS_TABLE_NAME: ${self:custom.resources.connectionsTableName}
     # The way this is used we need the https endpoint not the wss endpoint
     # figure out a way to manage that in the future
     # WS_API_ENDPOINT: '' # This is used for the initial deploy when rardash-web-socket doesn't exist
@@ -36,7 +36,7 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:UpdateItem
       Resource:
-        - ${self:custom.shared.resources.connectionsTableArn}
+        - ${self:custom.resources.connectionsTableArn}
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -54,7 +54,8 @@ provider:
 
 custom:
   basename: ${self:service}-${self:provider.stage}
-  shared: ${file(../../serverless.common.yml):shared}
+  deploymentBucket: ${file(../../serverless.common.yml):deploymentBucket}
+  resources: ${file(../../serverless.common.yml):resources}
 
 functions:
   defaultHandler:
