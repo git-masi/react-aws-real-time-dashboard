@@ -1,17 +1,22 @@
+import { isTokenExpired, verifyClientJwt } from '../../../utils/jwt';
+import { createAllowPolicy } from '../../../utils/iam';
+
 export const handler = wsConnectAuthorizer;
 
 async function wsConnectAuthorizer(event, context) {
   console.info(event);
+  const { queryStringParameters = {}, methodArn } = event;
+  const { authorization: token } = queryStringParameters;
 
   try {
-    const { queryStringParameters = {}, methodArn } = event;
-    const { authorization } = queryStringParameters;
+    const { payload: claims } = await verifyClientJwt(token);
+    const { clientId } = claims;
 
-    // Testing only, use JWT in production
-    if (!authorization || authorization !== '98765' || !methodArn)
-      throw new Error('Unauthorized');
+    if (!clientId || isTokenExpired(claims)) {
+      throw new Error('Auth token is invalid');
+    }
 
-    const allowPolicy = createAllowPolicy(authorization, methodArn);
+    const allowPolicy = createAllowPolicy(clientId, methodArn);
 
     context.succeed(allowPolicy);
 
@@ -20,29 +25,4 @@ async function wsConnectAuthorizer(event, context) {
     console.log(error);
     context.fail('Authorizer verification failed');
   }
-}
-
-function createAllowPolicy(principalId, resource) {
-  return createPolicy(principalId, 'Allow', resource);
-}
-
-function createPolicy(principalId, effect, resource) {
-  const authResponse = { principalId };
-
-  if (effect && resource) {
-    const statementOne = {
-      Action: 'execute-api:Invoke',
-      Effect: effect,
-      Resource: resource,
-    };
-
-    const policyDocument = {
-      Version: '2012-10-17',
-      Statement: [statementOne],
-    };
-
-    authResponse.policyDocument = policyDocument;
-  }
-
-  return authResponse;
 }

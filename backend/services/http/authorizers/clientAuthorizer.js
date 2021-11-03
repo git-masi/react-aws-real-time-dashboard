@@ -1,4 +1,5 @@
 import { isTokenExpired, verifyClientJwt } from '../../../utils/jwt';
+import { createAllowPolicy } from '../../../utils/iam';
 
 export const handler = clientAuthorizer;
 
@@ -25,29 +26,4 @@ async function clientAuthorizer(event, context, callback) {
     console.info(error);
     return callback('Unauthorized');
   }
-}
-
-function createAllowPolicy(principalId, resource) {
-  return createPolicy(principalId, 'Allow', resource);
-}
-
-function createPolicy(principalId, effect, resource) {
-  const authResponse = { principalId };
-
-  if (effect && resource) {
-    const statementOne = {
-      Action: 'execute-api:Invoke',
-      Effect: effect,
-      Resource: resource,
-    };
-
-    const policyDocument = {
-      Version: '2012-10-17',
-      Statement: [statementOne],
-    };
-
-    authResponse.policyDocument = policyDocument;
-  }
-
-  return authResponse;
 }
