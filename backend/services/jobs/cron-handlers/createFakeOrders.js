@@ -1,9 +1,10 @@
 import { name, commerce } from 'faker';
 import { randomInt } from 'd3-random';
+import { add } from 'date-fns';
 import { createWriteTransactionParams, dynamoDb } from '../../../utils/dynamo';
 import { orderStatuses, pkValues } from '../../../utils/constants';
 import { readAllClients } from '../../../utils/clients';
-import { add } from 'date-fns';
+import { disableCreateFakeOrdersRule } from '../../../utils/orders';
 
 const { MAIN_TABLE_NAME } = process.env;
 
@@ -12,6 +13,12 @@ export const handler = createFakeOrders;
 async function createFakeOrders() {
   try {
     const clients = await readAllClients();
+
+    if (!clients.length === 0) {
+      await disableCreateFakeOrdersRule();
+      return;
+    }
+
     const batches = batchClients(clients);
     const batchedParams = batches.map(buildDbTransactionParams);
     const updateResults = await Promise.allSettled(
