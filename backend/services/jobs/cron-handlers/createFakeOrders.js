@@ -17,27 +17,27 @@ async function createFakeOrders() {
       batchedParams.map((params) => dynamoDb.transactWrite(params))
     );
 
-    console.info(updateResults); // todo: error handling if an update fails
-
-    // DynamoDb transactions can only write 25 items at a time
-    function batchClients(clients, batches = []) {
-      if (clients.length <= 25) return [...batches, clients];
-
-      const batch = clients.slice(0, 25);
-
-      return batchClients(clients.slice(25), [...batches, batch]);
-    }
-
-    function buildDbTransactionParams(batch) {
-      const orders = batch.map((client) => [
-        MAIN_TABLE_NAME,
-        buildNewOrder(client.clientId),
-      ]);
-
-      return createWriteTransactionParams(...orders);
-    }
+    console.log(updateResults); // todo: error handling if an update fails
   } catch (error) {
     console.info(error);
+  }
+
+  // DynamoDb transactions can only write 25 items at a time
+  function batchClients(clients, batches = []) {
+    if (clients.length <= 25) return [...batches, clients];
+
+    const batch = clients.slice(0, 25);
+
+    return batchClients(clients.slice(25), [...batches, batch]);
+  }
+
+  function buildDbTransactionParams(batch) {
+    const orders = batch.map((client) => [
+      MAIN_TABLE_NAME,
+      buildNewOrder(client.clientId),
+    ]);
+
+    return createWriteTransactionParams(...orders);
   }
 
   function buildNewOrder(clientId) {

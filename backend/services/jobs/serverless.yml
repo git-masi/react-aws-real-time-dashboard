@@ -15,10 +15,22 @@ provider:
     name: ${self:custom.deploymentBucket}
   deploymentPrefix: ${self:custom.basename}
   lambdaHashingVersion: 20201221
+  environment:
+    MAIN_TABLE_NAME: ${self:custom.resources.mainTableName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - ${self:custom.resources.mainTableArn}
 
 custom:
   basename: ${self:service}-${self:provider.stage}
   deploymentBucket: ${file(../../serverless.common.yml):deploymentBucket}
+  resources: ${file(../../serverless.common.yml):resources}
 
 functions:
   createFakeOrders:

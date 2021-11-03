@@ -32,10 +32,11 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - ${self:custom.resources.mainTableArn}
-        - ${self:custom.resources.mainTableIndexArns}
     - Effect: Allow
       Action:
         - events:ListRules
+        - events:EnableRule
+        - events:DisableRule
       Resource:
         - arn:aws:events:${self:provider.region}:${aws:accountId}:rule/*
 
