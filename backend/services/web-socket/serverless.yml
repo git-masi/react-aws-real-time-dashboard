@@ -24,19 +24,9 @@ provider:
     # The way this is used we need the https endpoint not the wss endpoint
     # figure out a way to manage that in the future
     # WS_API_ENDPOINT: '' # This is used for the initial deploy when rardash-web-socket doesn't exist
-    WS_API_ENDPOINT: ${cf:rardash-web-socket-${self:provider.stage}.ServiceEndpointWebsocket}
+    WS_API_ENDPOINT: !ImportValue 'ServiceEndpointWebsocket'
     STORE_ID_INDEX: connectionsStoreId
   iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:DeleteItem
-        - dynamodb:UpdateItem
-      Resource:
-        - ${self:custom.resources.connectionsTableArn}
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -50,7 +40,8 @@ provider:
         - dynamodb:GetShardIterator
         - dynamodb:ListStreams
       Resource:
-        - ${cf:rardash-http-${self:provider.stage}.RARDashMainTableArn}
+        - ${self:custom.resources.connectionsTableArn}
+        - ${self:custom.resources.mainTableArn}
 
 custom:
   basename: ${self:service}-${self:provider.stage}
@@ -86,15 +77,15 @@ functions:
   #     - websocket:
   #         route: keepAlive
 
-  ordersStream:
-    handler: stream-handlers/ordersStream.handler
-    events:
-      - stream:
-          type: dynamodb
-          batchSize: 1
-          startingPosition: LATEST
-          arn: ${cf:rardash-http-${self:provider.stage}.RARDashMainTableStreamArn}
-          enabled: true
+  # ordersStream:
+  #   handler: stream-handlers/ordersStream.handler
+  #   events:
+  #     - stream:
+  #         type: dynamodb
+  #         batchSize: 1
+  #         startingPosition: LATEST
+  #         arn: ${self:custom.resources.mainTableStreamArn}
+  #         enabled: true
 
   # tableCleanup:
   #   handler: web-socket-handlers/tableCleanup.handler

@@ -5,13 +5,13 @@ export const handler = connect;
 
 async function connect(event) {
   console.info(event);
-  const connectionItem = createConnectionItem(event);
+  const connection = buildConnection();
 
   try {
-    await addConnection(connectionItem);
+    await addConnection(connection);
 
     console.info(
-      `New web socket connection ${connectionItem.connectionId} from origin ${connectionItem.requestOrigin} added`
+      `New web socket connection ${connection.connectionId} from origin ${connection.requestOrigin} added`
     );
 
     return WsResponse.success();
@@ -19,21 +19,20 @@ async function connect(event) {
     console.info(error);
     return WsResponse.serverError();
   }
-}
 
-function createConnectionItem(event) {
-  const {
-    headers: { Origin: origin },
-    requestContext: { connectionId, connectedAt, domainName, authorizer },
-  } = event;
+  function buildConnection() {
+    const {
+      headers: { Origin: origin },
+      requestContext: { connectionId, connectedAt, domainName, authorizer },
+    } = event;
+    const clientId = authorizer.principalId;
 
-  const item = {
-    connectionId,
-    connectedAt: new Date(connectedAt).toISOString(),
-    requestOrigin: origin,
-    requestDomain: domainName,
-    storeId: authorizer.principalId,
-  };
-
-  return item;
+    return {
+      connectionId,
+      connectedAt: new Date(connectedAt).toISOString(),
+      requestOrigin: origin,
+      requestDomain: domainName,
+      clientId,
+    };
+  }
 }

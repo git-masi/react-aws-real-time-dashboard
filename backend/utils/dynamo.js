@@ -8,11 +8,14 @@ export const dynamoDb = {
   transactWrite(params, documentClient = defaultDocumentClient) {
     return documentClient.transactWrite(params).promise();
   },
-  transactUpdate(params, documentClient = defaultDocumentClient) {
-    return documentClient.transactUpdate(params).promise();
-  },
   query(params, documentClient = defaultDocumentClient) {
     return documentClient.query(params).promise();
+  },
+  put(params, documentClient = defaultDocumentClient) {
+    return documentClient.put(params).promise();
+  },
+  delete(params, documentClient = defaultDocumentClient) {
+    return documentClient.delete(params).promise();
   },
 };
 
