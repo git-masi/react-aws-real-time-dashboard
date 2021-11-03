@@ -7,11 +7,9 @@ const { MAIN_TABLE_NAME } = process.env;
 export async function readAllClients(items = [], ExclusiveStartKey = {}) {
   const params = {
     TableName: MAIN_TABLE_NAME,
-    // KeyConditionExpression: 'pk = :pk and sk < :sk',
     KeyConditionExpression: 'pk = :pk',
     ExpressionAttributeValues: {
       ':pk': pkValues.client,
-      // ':sk': new Date().toISOString(),
     },
   };
 
@@ -21,8 +19,8 @@ export async function readAllClients(items = [], ExclusiveStartKey = {}) {
 
   const result = [...items, ...Items];
 
-  if (!isEmpty(LastEvaluatedKey))
-    return readAllClients(result, LastEvaluatedKey);
+  if (LastEvaluatedKey && !isEmpty(LastEvaluatedKey))
+    return await readAllClients(result, LastEvaluatedKey);
 
   return result;
 }
