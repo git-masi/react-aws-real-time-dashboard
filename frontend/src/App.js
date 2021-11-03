@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { useIdleTimer } from 'react-idle-timer';
 import {
   Button,
@@ -10,6 +11,7 @@ import {
 import AllOrders from './features/orders/AllOrders';
 import UpdateOrderStatuses from './features/orders/UpdateOrderStatuses';
 import { titleCase } from './utils/strings';
+import { selectClientToken } from './app/authSlice';
 
 const views = Object.freeze({
   none: 'none',
@@ -43,11 +45,17 @@ export default function App() {
 
 function Nav(props) {
   const { setView } = props;
-  const buttons = Object.values(views).map((path) => (
-    <Button key={path} variant="outlined" onClick={() => setView(path)}>
-      {titleCase(path)}
-    </Button>
-  ));
+  const clientToken = useSelector(selectClientToken);
+
+  if (!clientToken) return null;
+
+  const buttons = Object.values(views)
+    .filter((path) => path !== views.none)
+    .map((path) => (
+      <Button key={path} variant="outlined" onClick={() => setView(path)}>
+        {titleCase(path)}
+      </Button>
+    ));
 
   return (
     <Stack direction={'row'} sx={{ padding: '1rem 0' }} spacing={2}>
@@ -57,8 +65,13 @@ function Nav(props) {
 }
 
 function ClientForm() {
+  const login = (e) => {
+    e.preventDefault();
+    console.log('login');
+  };
+
   return (
-    <form>
+    <form onSubmit={login}>
       <label>
         username
         <input type="text" />
@@ -68,6 +81,8 @@ function ClientForm() {
         password
         <input type="text" />
       </label>
+
+      <button type="submit">Login</button>
     </form>
   );
 }
