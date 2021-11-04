@@ -60,6 +60,19 @@ functions:
             schema:
               application/json: ${file(schema/createOrder.json)}
 
+  updateOrder:
+    handler: api-handlers/updateOrder.handler
+    events:
+      - http:
+          method: PATCH
+          path: /orders
+          cors: true
+          authorizer:
+            name: clientAuthorizer
+          request:
+            schema:
+              application/json: ${file(schema/updateOrder.json)}
+
   readOrders:
     handler: api-handlers/readOrders.handler
     events:
@@ -77,11 +90,6 @@ functions:
           method: POST
           path: /clients
           cors: true
-          # authorizer:
-          #   name: clientAuthorizer
-          # request:
-          #   schema:
-          #     application/json: ${file(schema/createOrder.json)}
 
   test:
     handler: api-handlers/test.handler

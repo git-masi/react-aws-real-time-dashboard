@@ -81,7 +81,7 @@ function Order(props) {
 
   const handleChange = (e) => {
     const { value: status } = e.target;
-    updatePost({ ...order, status });
+    updatePost({ pk: order.pk, sk: order.sk, status });
   };
 
   return (

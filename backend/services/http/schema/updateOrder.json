@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+
+  "type": "object",
+  "title": "The request body schema for updating an order",
+  "properties": {
+    "status": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "pk": {
+      "type": "string"
+    },
+    "sk": {
+      "type": "string"
+    }
+  },
+  "required": ["status", "pk", "sk"]
+}
