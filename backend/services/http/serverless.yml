@@ -69,9 +69,6 @@ functions:
           cors: true
           authorizer:
             name: clientAuthorizer
-          request:
-            schema:
-              application/json: ${file(schema/updateOrder.json)}
 
   readOrders:
     handler: api-handlers/readOrders.handler
