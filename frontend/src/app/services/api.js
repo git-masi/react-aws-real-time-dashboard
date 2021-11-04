@@ -1,16 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-// Ideally these would be env vars
-const httpApiEndpoint =
-  'https://ejpsw7jlve.execute-api.us-east-1.amazonaws.com/dev';
-const websocketEndpoint =
-  'wss://6oebv9lcyk.execute-api.us-east-1.amazonaws.com/dev';
+const { HTTP_API_ENDPOINT, WEB_SOCKET_ENDPOINT } = process.env;
 
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: httpApiEndpoint,
+    baseUrl: HTTP_API_ENDPOINT,
     prepareHeaders: (headers, { getState }) => {
       // By default, if we have a token in the store, let's use that for authenticated requests
       const token = getState().auth.clientToken;
@@ -74,7 +70,7 @@ async function handleOrderCacheEntryAdded(
   const token = getState().auth.clientToken;
   // create a websocket connection when the cache subscription starts
   const ws = new ReconnectingWebSocket(
-    `${websocketEndpoint}?authorization=${token}`
+    `${WEB_SOCKET_ENDPOINT}?authorization=${token}`
   );
 
   let wsTimeout = null;
